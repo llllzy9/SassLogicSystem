@@ -1,5 +1,6 @@
 <template>
-    <a-layout style="min-height: 100vh">
+    <div class="container">
+        <a-layout style="min-height: 100vh">
         <a-layout-sider v-model:collapsed="collapsed" collapsible>
             <div class="logo" />
             <side-menu />
@@ -15,6 +16,8 @@
             </a-layout-content>
         </a-layout>
     </a-layout>
+    </div>
+
 </template>
 
 <script lang="ts" setup>
@@ -29,6 +32,10 @@ const collapsed = ref<boolean>(false)
 </script>
 
 <style lang="scss" scoped>
+.container{
+    width: 100vw;
+    height: 100vh;
+}
 .logo {
     height: 32px;
     margin: 16px;

@@ -10,10 +10,46 @@ const router = createRouter({
       component: () => import('../views/login/index.vue')
     },
     {
-      path: '/home',
-      name: 'home',
-      component: () => import('../views/home/index.vue')
-    }
+      path: '/container',
+      name: 'container',
+      redirect:'/container/home',
+      component: () => import('../views/container/index.vue'),
+      children:[
+        {
+          path: 'home',
+          name: 'home',
+          meta:{
+            title:'主页'
+          },
+          component: () => import('../views/container/home/index.vue')
+        },
+        {
+          path: 'actManage',
+          name: 'actManage',
+          meta:{
+            title:'账号管理'
+          },
+          component: () => import('../views/container/actManage/index.vue')
+        },
+        {
+          path: 'labCourse',
+          name: 'labCourse',
+          meta:{
+            title:'实验课程'
+          },
+          component: () => import('../views/container/labCourse/index.vue')
+        },
+        {
+          path: 'jobInfo',
+          name: 'jobInfo',
+          meta:{
+            title:'作业信息'
+          },
+          component: () => import('../views/container/jobInfo/index.vue')
+        }
+      ]
+    },
+
   ]
 })
 

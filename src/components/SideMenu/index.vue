@@ -1,54 +1,50 @@
 <template>
-      <a-menu theme="dark" :selectedKeys="selectedKeys" mode="inline">
-        <a-menu-item key="1">
-          <pie-chart-outlined />
-          <span>Option 1</span>
-        </a-menu-item>
-        <a-menu-item key="2">
-          <desktop-outlined />
-          <span>Option 2</span>
-        </a-menu-item>
-        <a-sub-menu key="sub1">
-          <template #title>
-            <span>
-              <user-outlined />
-              <span>User</span>
-            </span>
-          </template>
-          <a-menu-item key="3">Tom</a-menu-item>
-          <a-menu-item key="4">Bill</a-menu-item>
-          <a-menu-item key="5">Alex</a-menu-item>
-        </a-sub-menu>
-        <a-sub-menu key="sub2">
-          <template #title>
-            <span>
-              <team-outlined />
-              <span>Team</span>
-            </span>
-          </template>
-          <a-menu-item key="6">Team 1</a-menu-item>
-          <a-menu-item key="8">Team 2</a-menu-item>
-        </a-sub-menu>
-        <a-menu-item key="9">
-          <file-outlined />
-          <span>File</span>
-        </a-menu-item>
-      </a-menu>
+  <a-menu 
+  theme="dark" 
+  mode="inline"
+  :selectedKeys="[route.path]"
+  >
+    <a-menu-item key="/home">
+      <router-link to="home">
+        
+        <HomeOutlined />
+        <span>主页</span>
+      </router-link>
+    </a-menu-item>
+    <a-menu-item key="/actManage">
+      <router-link to="actManage">
+        <TeamOutlined />
+        <span>账号管理</span>
+      </router-link>
+    </a-menu-item>
+    <a-menu-item key="/labCourse">
+      <router-link to="labCourse">
+        <ClusterOutlined />
+        <span>实验课程</span>
+      </router-link>
+    </a-menu-item>
+    <a-menu-item key="/jobInfo">
+      <router-link to="jobInfo">
+        <EditOutlined />
+        <span>作业信息</span>
+      </router-link>
+    </a-menu-item>
+  </a-menu>
 </template>
 
 <script lang="ts" setup>
 import {
-  PieChartOutlined,
-  DesktopOutlined,
-  UserOutlined,
+  HomeOutlined,
+  EditOutlined,
   TeamOutlined,
-  FileOutlined,
+  ClusterOutlined,
 } from '@ant-design/icons-vue';
-import { reactive, ref } from 'vue';
+import { reactive } from 'vue';
+import { useRoute } from 'vue-router';
 
-const selectedKeys = reactive<string[]>(['1'])
+const route = useRoute()
+
+
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

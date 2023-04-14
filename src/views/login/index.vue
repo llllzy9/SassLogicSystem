@@ -21,7 +21,7 @@
                     <a-form-item class="pass-input">
                         <a-input :value="loginForm.password" placeholder="密码">
                             <template #prefix>
-                                <user-outlined type="user" />
+                                <LockOutlined />
                             </template></a-input>
                     </a-form-item>
 
@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts" setup>
-import { UserOutlined, InfoCircleOutlined } from '@ant-design/icons-vue';
+import { UserOutlined,LockOutlined } from '@ant-design/icons-vue';
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 

@@ -1,5 +1,5 @@
 <template>
-    <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">
+    <div :style="{ padding: '24px', background: '#fff', minHeight: '360px',height:'93%' }">
         <RouterView />
     </div>
 </template>

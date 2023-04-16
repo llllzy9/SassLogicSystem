@@ -4,7 +4,7 @@
             <Form />
         </div>
         <div class="content">
-            <Card v-for="card in 5" />
+            <Card v-for="card in 5" style="margin: 16px;" />
         </div>
 
     </div>
@@ -21,12 +21,13 @@ import Form from '@/components/Content/Form/index.vue'
     flex-direction: column;
 
     .form-wrap{
-        height: 100px;
+        height: 50px;
         margin-bottom: 20px;
     }
     .content{
         display: flex;
-        justify-content: space-around;
+        justify-content: flex-start;
+        flex-wrap: wrap;
     }
 }
 </style>

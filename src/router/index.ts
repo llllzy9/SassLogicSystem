@@ -37,7 +37,16 @@ const router = createRouter({
           meta:{
             title:'实验课程'
           },
-          component: () => import('../views/container/labCourse/index.vue')
+          component: () => import('../views/container/labCourse/index.vue'),
+          children:[
+            {
+              path: 'courseDetail',
+              name: 'courseDetail',
+              meta:{
+                title:'课程详情'
+              },
+              component: () => import('../views/container/labCourse/courseDetail/index.vue')
+            },]
         },
         {
           path: 'jobInfo',

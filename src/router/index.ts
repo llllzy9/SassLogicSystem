@@ -29,7 +29,20 @@ const router = createRouter({
           meta:{
             title:'账号管理'
           },
-          component: () => import('../views/container/actManage/index.vue')
+          redirect:'actManage/basicInfo',
+          component: () => import('../views/container/actManage/index.vue'),
+          children:[
+            {
+              path: 'basicInfo',
+              name: 'basicInfo',
+              component: () => import('../views/container/actManage/basicInfo/index.vue')
+            },
+            {
+              path: 'passManage',
+              name: 'passManage',
+              component: () => import('../views/container/actManage/passManage/index.vue')
+            },
+          ]
         },
         {
           path: 'labCourse',

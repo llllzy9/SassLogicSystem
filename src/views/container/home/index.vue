@@ -1,11 +1,13 @@
 <template>
     <div class="container">
+        <myCarousel></myCarousel>
         <myEcharts :option="option1" />
         <myEcharts :option="option2" />
     </div>
 </template>
 
 <script lang="ts" setup>
+import myCarousel from "@/components/Content/Carousel/index.vue"
 import myEcharts from "@/components/Content/Echarts/index.vue"
 import { ref } from "vue";
 const option1 = {

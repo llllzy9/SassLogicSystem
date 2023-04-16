@@ -1,8 +1,8 @@
 <template>
     <div class="container">
-        <div class="form-wrap">
+        <!-- <div class="form-wrap">
             <Form />
-        </div>
+        </div> -->
         <div class="content">
             <Card v-for="card in 5" />
         </div>

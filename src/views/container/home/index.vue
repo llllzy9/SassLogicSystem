@@ -7,8 +7,8 @@
 </template>
 
 <script lang="ts" setup>
-import myCarousel from "@/components/Content/Carousel/index.vue"
-import myEcharts from "@/components/Content/Echarts/index.vue"
+import myCarousel from "@/components/Carousel/index.vue"
+import myEcharts from "@/components/Echarts/index.vue"
 import { ref } from "vue";
 const option1 = {
     title: {

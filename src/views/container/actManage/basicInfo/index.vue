@@ -1,5 +1,5 @@
 <template>
-    <a-form>
+    <a-form style="width: 400px;">
         <a-form-item label="姓名">
             <a-input />
         </a-form-item>
@@ -36,7 +36,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-
+import { useUserStore } from '@/stores/user';
+const useStore = useUserStore()
 const value = ref<number>(1);
 
 </script>

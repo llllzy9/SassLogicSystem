@@ -1,18 +1,13 @@
 <template>
     <div class="container">
-        <!-- <div class="form-wrap">
-            <Form />
-        </div> -->
         <div class="content">
             <Card v-for="card in 5" style="margin: 16px;" />
         </div>
-
     </div>
 </template>
 
 <script lang="ts" setup>
-import Card from '@/components/Content/Card/index.vue'
-import Form from '@/components/Content/Form/index.vue'
+import Card from '@/components/Card/index.vue'
 </script>
 
 <style lang="scss" scoped>

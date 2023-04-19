@@ -17,7 +17,9 @@
                         <a-breadcrumb-item>User</a-breadcrumb-item>
                         <a-breadcrumb-item>Bill</a-breadcrumb-item>
                     </a-breadcrumb>
-                    <content />
+                    <div :style="{ padding: '24px', background: '#fff', minHeight: '360px', height: '93%' }">
+                        <RouterView />
+                    </div>
                 </a-layout-content>
             </a-layout>
         </a-layout>
@@ -25,14 +27,16 @@
 </template>
 
 <script lang="ts" setup>
-import { CodeSandboxCircleFilled } from '@ant-design/icons-vue';
+import { CodeSandboxCircleFilled } from '@ant-design/icons-vue'
+import { getUserInfo } from "@/network/user.js"
+import { useUserStore } from '@/stores/user'
 import SideMenu from '@/components/SideMenu/index.vue'
-import Content from '@/components/Content/index.vue'
 import Head from '@/components/Header/index.vue'
+import { ref, onMounted } from 'vue';
 
-import { ref } from 'vue';
+const userStore = useUserStore()
 
-// const collapsed: <boolean> = ref(false)
+
 const collapsed = ref<boolean>(false)
 </script>
 

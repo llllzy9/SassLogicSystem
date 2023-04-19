@@ -9,17 +9,6 @@
           密码管理
         </a-menu-item>
       </a-menu>
-      <!-- <a-menu mode="horizontal" v-if="route.path.includes('jobInfo')">
-        <a-menu-item key="base" @click="routeGoto('')">
-          全部
-        </a-menu-item>
-        <a-menu-item key="pass" @click="routeGoto('')">
-          未完成
-        </a-menu-item>
-        <a-menu-item key="pass" @click="routeGoto('')">
-          已完成
-        </a-menu-item>
-      </a-menu> -->
     </div>
     <div class="avatar">
       <a-dropdown>
@@ -48,8 +37,6 @@ import { useRoute,useRouter } from 'vue-router';
 const route = useRoute()
 const router = useRouter()
 
-console.log(route.path);
-
 const routeGoto = (url:string) => {
   router.push({
     path:url
@@ -67,6 +54,7 @@ const routeGoto = (url:string) => {
 
   .avatar {
     position: absolute;
+    top: 0px;
     right: 20px;
   }
 }

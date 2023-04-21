@@ -11,35 +11,37 @@
       </a-menu>
     </div>
     <div class="avatar">
+      <Avatar />
       <a-dropdown>
-        <Avatar />
+        <span>
+          {{ userStore.userInfo.nickname }}
+          <DownOutlined />
+        </span>
         <template #overlay>
           <a-menu>
-            <a-menu-item>
-              <a href="javascript:;">个人中心</a>
-            </a-menu-item>
-            <a-menu-item>
-              <a href="javascript:;">设置</a>
-            </a-menu-item>
             <a-menu-item>
               <RouterLink to="/">退出登录</RouterLink>
             </a-menu-item>
           </a-menu>
         </template>
       </a-dropdown>
+
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import Avatar from './Avatar/index.vue'
-import { useRoute,useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/user'
+import { DownOutlined } from '@ant-design/icons-vue';
+const userStore = useUserStore()
 const route = useRoute()
 const router = useRouter()
 
-const routeGoto = (url:string) => {
+const routeGoto = (url: string) => {
   router.push({
-    path:url
+    path: url
   })
 }
 
@@ -53,9 +55,19 @@ const routeGoto = (url:string) => {
   width: 100%;
 
   .avatar {
+    
+    width: 100px;
     position: absolute;
     top: 0px;
     right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+
+    span {
+      color: #595959;
+      font-weight: 500;
+    }
   }
 }
 </style>

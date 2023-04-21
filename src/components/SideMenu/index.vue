@@ -4,19 +4,19 @@
   mode="inline"
   :selectedKeys="[route.path]"
   >
-    <a-menu-item key="/home" @click="routeGoto('/container/home')">
+    <a-menu-item key="/home" @click="routeGoto('home')">
         <HomeOutlined />
         <span>主页</span>
     </a-menu-item>
-    <a-menu-item key="/actManage" @click="routeGoto('/container/actManage')">
+    <a-menu-item key="/actManage" @click="routeGoto('actManage')">
         <TeamOutlined />
         <span>账号管理</span>
     </a-menu-item>
-    <a-menu-item key="/labCourse" @click="routeGoto('/container/labCourse')">
+    <a-menu-item key="/labCourse" @click="routeGoto('labCourse')">
         <ClusterOutlined />
         <span>实验课程</span>
     </a-menu-item>
-    <a-menu-item key="/jobInfo" @click="routeGoto('/container/jobInfo')">
+    <a-menu-item key="/jobInfo" @click="routeGoto('jobInfo')">
         <EditOutlined />
         <span>作业信息</span>
     </a-menu-item>
@@ -34,9 +34,9 @@ import { reactive } from 'vue';
 import { useRoute,useRouter } from 'vue-router';
 const router = useRouter()
 
-const routeGoto = (url:string) => {
+const routeGoto = (path:string) => {
   router.push({
-    path:url
+    name:path
   })
 }
 

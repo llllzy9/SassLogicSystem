@@ -112,14 +112,6 @@ function onSubmit() {
                             userStore.role = res.data.data.role
                             spinning.value = false
                             //获取用户信息
-                            await getUserInfo()
-                                .then((res: any) => {
-                                    if (res.data.code === 200) {
-                                        let obj = Object.assign(userStore, res.data.data)
-                                        console.log(obj, 'obj');
-                                    }
-                                })
-                                .catch((err: any) => console.log(err))
                             router.push({ path: '/container' })
                         } else {
                             return Promise.reject(res.data.msg)

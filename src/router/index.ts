@@ -33,7 +33,7 @@ const router = createRouter({
           meta:{
             title:'账号管理'
           },
-          redirect:'actManage/basicInfo',
+          redirect:'/container/actManage/basicInfo',
           component: () => import('../views/container/actManage/index.vue'),
           children:[
             {
@@ -63,7 +63,7 @@ const router = createRouter({
                 title:'课程详情'
               },
               component: () => import('../views/container/labCourse/courseDetail/index.vue')
-            },]
+            }]
         },
         {
           path: 'jobInfo',

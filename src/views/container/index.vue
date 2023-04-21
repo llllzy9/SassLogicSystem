@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="layout-container">
         <a-layout style="min-height: 100vh">
             <a-layout-sider v-model:collapsed="collapsed" collapsible>
                 <div class="logo">
@@ -35,17 +35,18 @@ import Head from '@/components/Header/index.vue'
 import { ref, onMounted } from 'vue';
 
 const userStore = useUserStore()
-
+getUserInfo()
+    .then((res: any) => {
+        if (res.data.code === 200) {
+            Object.assign(userStore.userInfo, res.data.data)
+        }
+    })
+    .catch((err: any) => console.log(err))
 
 const collapsed = ref<boolean>(false)
 </script>
 
 <style lang="scss" scoped>
-.container {
-    width: 100vw;
-    height: 100vh;
-}
-
 .logo {
     height: 32px;
     margin: 16px;

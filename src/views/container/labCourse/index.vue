@@ -1,13 +1,80 @@
 <template>
     <div class="container">
         <div class="content">
-            <Card v-for="card in 5" style="margin: 16px;" />
+            <CardList :dataList="state.dataList" :openModal="openModal"/>
+        </div>
+        <div class="popUps">
+            <a-modal v-model:visible="visible" width="1000px" title="Basic Modal" @ok="handleOk">
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+            </a-modal>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import Card from '@/components/Card/index.vue'
+import CardList from '@/components/CardList/index.vue'
+import { getAllCourse } from '@/network/course.js'
+import { ref, reactive } from 'vue';
+getAllCourse()
+    .then((res: any) => {
+        console.log(res.data);
+    })
+
+const state = reactive({
+    dataList:[
+    {
+            image:'https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png',
+            title:'数字逻辑',
+            teacher:'溪利亚',
+            startTime:'2022-01-22',
+            class:'计算机科学与1技术'
+        },
+        {
+            image:'https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png',
+            title:'数字逻辑',
+            teacher:'溪利亚',
+            startTime:'2022-01-22',
+            class:'计算机科学与技术'
+        },
+        {
+            image:'https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png',
+            title:'数字逻辑',
+            teacher:'溪利亚',
+            startTime:'2022-01-22',
+            class:'计算机科学与1技术'
+        },
+        {
+            image:'https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png',
+            title:'数字逻辑',
+            teacher:'溪利亚',
+            startTime:'2022-01-22',
+            class:'计算机科学与技术'
+        },
+        {
+            image:'https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png',
+            title:'数字逻辑',
+            teacher:'溪利亚',
+            startTime:'2022-01-22',
+            class:'计算机科学与1技术'
+        },
+        {
+            image:'https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png',
+            title:'数字逻辑',
+            teacher:'溪利亚',
+            startTime:'2022-01-22',
+            class:'计算机科学与技术'
+        },
+    ]
+})
+
+const visible = ref<boolean>(false)
+function openModal(i:number,str:string) {
+    console.log(i,str);
+    visible.value = true
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -15,14 +82,15 @@ import Card from '@/components/Card/index.vue'
     display: flex;
     flex-direction: column;
 
-    .form-wrap{
+    .form-wrap {
         height: 50px;
         margin-bottom: 20px;
     }
-    .content{
-        display: flex;
-        justify-content: flex-start;
-        flex-wrap: wrap;
+
+    .content {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        row-gap: 30px;
     }
 }
 </style>

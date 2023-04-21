@@ -32,7 +32,7 @@ export const useUserStore = defineStore('user', () => {
 
     const avatarImg = ():string => `http://154.204.60.38:8000/img/user/${userInfo.username}/${userInfo.avatar}` 
     return {
-        ...toRefs(userInfo),
+        userInfo,
         avatarImg
     }
 })

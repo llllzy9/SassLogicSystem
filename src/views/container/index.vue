@@ -13,10 +13,7 @@
                     <Head />
                 </a-layout-header>
                 <a-layout-content style="margin: 0 16px">
-                    <a-breadcrumb style="margin: 16px 0">
-                        <a-breadcrumb-item>User</a-breadcrumb-item>
-                        <a-breadcrumb-item>Bill</a-breadcrumb-item>
-                    </a-breadcrumb>
+                    <myBreadcrumb style="margin: 16px 0"/>
                     <div :style="{ padding: '24px', background: '#fff', minHeight: '360px', height: '93%' }">
                         <RouterView />
                     </div>
@@ -32,6 +29,7 @@ import { getUserInfo } from "@/network/user.js"
 import { useUserStore } from '@/stores/user'
 import SideMenu from '@/components/SideMenu/index.vue'
 import Head from '@/components/Header/index.vue'
+import myBreadcrumb from '@/components/breadcrumb/index.vue'
 import { ref, onMounted } from 'vue';
 
 const userStore = useUserStore()

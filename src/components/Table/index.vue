@@ -12,9 +12,9 @@
             </span>
         </template>
         <template #action="{ record }">
-            <span>
-                <a-button type="primary" shape="round">
-                    开始
+            <span v-for="(item,index) in record.action" :key="index">
+                <a-button type="primary" shape="round" @click="item.func(record)">
+                  {{ item.text }}
                     <down-outlined />
                 </a-button>
             </span>

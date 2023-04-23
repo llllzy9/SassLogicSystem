@@ -5,8 +5,8 @@
                 <img alt="example" :src="card.image">
             </template>
             <template class="ant-card-actions" #actions>
-                <span @click="openModal(index,'detail')">查看详情</span>
-                <span @click="openModal(index,'exam')">进入实验</span>
+                <span @click="openModal(card,index,'detail')">查看详情</span>
+                <span @click="openModal(card,index,'exam')">进入实验</span>
             </template>
             <a-card-meta :title="card.title">
                 <template #description>
@@ -34,7 +34,7 @@ interface Info{
 }
 interface Props{
     dataList?:Info[]
-    openModal?:(i:number,str:string)=> void
+    openModal?:(obj:any,i:number,str:string)=> void
 }
 const props = withDefaults(defineProps<Props>(), {
     dataList:() => [
@@ -51,13 +51,6 @@ const props = withDefaults(defineProps<Props>(), {
     }
     
 })
-
-const router = useRouter()
-
-function routerGoto(path:string) {
-    
-    router.push({name:path, params: { username: 'eduardo' }})
-}
 </script>
 <style lang="scss" scoped>
 </style>

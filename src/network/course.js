@@ -6,3 +6,10 @@ export function getAllCourse() {
         method:'get',
     })
 }
+
+export function getHomework() {
+    return request({
+        url:'/student/getHomework',
+        method:'get'
+    })
+}

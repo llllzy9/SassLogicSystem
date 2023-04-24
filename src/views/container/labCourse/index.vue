@@ -51,13 +51,19 @@
 <script lang="ts" setup>
 import CardList from '@/components/CardList/index.vue'
 import myTable from '@/components/Table/index.vue'
-import { getAllCourse } from '@/network/course.js'
+import { getAllCourse,getHomework } from '@/network/course.js'
 import { ref, reactive } from 'vue';
+import { useRouter } from 'vue-router';
+const router = useRouter()
 getAllCourse()
     .then((res: any) => {
         console.log(res.data);
     })
-
+    getHomework()
+    .then((res:any)=>{
+        console.log(res.data);
+        
+    })
 const state = reactive({
     //课程数据
     dataList: [
@@ -199,10 +205,19 @@ const fullPopStyle = {
 const visible = ref<boolean>(false)
 const popIndex = ref<number>(0)
 function openModal(obj: any, i: number, str: string) {
-    console.log(obj, i, str);
+    console.log(obj);
+    
+    if(str === 'exam'){
     popIndex.value = i
     state.popUpsData = obj
     visible.value = true
+    }else if(str === 'detail'){
+        router.push({
+            name:'courseDetail',
+            query:obj
+        })
+    }
+
 }
 const handleCancel = () => {
     visible.value = false;

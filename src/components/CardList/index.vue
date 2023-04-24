@@ -5,8 +5,8 @@
                 <img alt="example" :src="card.image">
             </template>
             <template class="ant-card-actions" #actions>
-                <span @click="openModal(card,index,'detail')">查看详情</span>
                 <span @click="openModal(card,index,'exam')">进入实验</span>
+                <span @click="openModal(card,index,'detail')">查看详情</span>
             </template>
             <a-card-meta :title="card.title">
                 <template #description>

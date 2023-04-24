@@ -39,11 +39,17 @@ const router = createRouter({
             {
               path: 'basicInfo',
               name: 'basicInfo',
+              meta:{
+                title:'基础资料'
+              },
               component: () => import('../views/container/actManage/basicInfo/index.vue')
             },
             {
               path: 'passManage',
               name: 'passManage',
+              meta:{
+                title:'密码管理'
+              },
               component: () => import('../views/container/actManage/passManage/index.vue')
             },
           ]

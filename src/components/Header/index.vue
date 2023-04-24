@@ -15,7 +15,6 @@
       <a-dropdown>
         <span>
           {{ userStore.userInfo.nickname }}
-          <DownOutlined />
         </span>
         <template #overlay>
           <a-menu>

@@ -55,14 +55,14 @@ const routeGoto = (url: string) => {
 
   .avatar {
     
-    width: 100px;
+    width: 130px;
+    height: 100%;
     position: absolute;
     top: 0px;
     right: 20px;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-
     span {
       color: #595959;
       font-weight: 500;

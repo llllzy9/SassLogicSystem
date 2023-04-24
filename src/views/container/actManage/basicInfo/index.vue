@@ -1,24 +1,26 @@
 <template>
-    <a-form :model="formData" style="width: 400px;">
-        <a-form-item label="姓名">
+    <a-form :model="formData" style="width: 400px;" :rules="rules" ref="formRef">
+        <a-form-item label="姓名" name="nickname">
             <a-input v-model:value="formData.nickname" :disabled="!isChange" />
         </a-form-item>
-        <a-form-item label="邮箱">
+        <a-form-item label="邮箱" name="email">
             <a-input v-model:value="formData.email" :disabled="!isChange" />
         </a-form-item>
-        <a-form-item label="班级">
-            <a-input v-model:value="formData.clsName" :disabled="!isChange" />
+        <a-form-item label="班级" name="clsName">
+            <a-select ref="select" v-model:value="formData.clsName" @change="optionChange" :disabled="!isChange">
+                <a-select-option v-for="opt in state.class" :key="opt.id" :value="opt.id">{{ opt.cls }}</a-select-option>
+            </a-select>
         </a-form-item>
-        <a-form-item label="性别">
+        <a-form-item label="性别" name="sex">
             <a-radio-group v-model:value="formData.sex" :disabled="!isChange">
                 <a-radio :value="'0'">男</a-radio>
                 <a-radio :value="'1'">女</a-radio>
             </a-radio-group>
         </a-form-item>
-        <a-form-item label="手机号">
+        <a-form-item label="手机号" name="phoneNumber">
             <a-input v-model:value="formData.phoneNumber" :disabled="!isChange" />
         </a-form-item>
-        <a-form-item label="学校">
+        <a-form-item label="学校" name="school">
             <a-input v-model:value="formData.school" :disabled="!isChange" />
         </a-form-item>
         <a-form-item label="头像">
@@ -35,7 +37,7 @@
         </a-form-item>
         <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
             <a-button type="primary" @click="submit">{{ isChange ? '保存' : '修改' }}</a-button>
-            <a-button style="margin-left: 10px" v-show="isChange">重置</a-button>
+            <a-button style="margin-left: 10px" v-show="isChange" @click="resetForm">重置</a-button>
         </a-form-item>
     </a-form>
 </template>
@@ -54,11 +56,15 @@ getUserInfo()
             imageUrl.value = userStore.avatarImg()
         }
     })
-    getAllClass()
-        .then((res:any) => {
-            console.log(res.data);
-            
-        })
+getAllClass()
+    .then((res: any) => {
+        console.log(res.data);
+        if (res.data.code === 200) {
+            state.class = res.data.data
+        }
+        console.log(state.class, ' state.calss');
+
+    })
 
 interface FileItem {
     uid: string;
@@ -78,6 +84,7 @@ interface FileInfo {
 const isChange = ref<boolean>(false)
 const userStore = useUserStore()
 const fileList = ref([])
+const formRef = ref();
 const loading = ref<boolean>(false)
 const imageUrl = ref<string>('')
 const state = reactive({
@@ -88,10 +95,12 @@ const state = reactive({
         nickname: '',
         email: '',
         clsName: '',
+        clsId: '',
         sex: '',
         phoneNumber: '',
         school: ''
-    }
+    },
+    class: []
 })
 const { formData } = toRefs(state)
 
@@ -100,7 +109,6 @@ function getBase64(img: Blob, callback: (base64Url: string) => void) {
     reader.addEventListener('load', () => callback(reader.result as string));
     reader.readAsDataURL(img);
 }
-
 const handleChange = (info: FileInfo) => {
     if (info.file.status === 'uploading') {
         loading.value = true;
@@ -118,7 +126,6 @@ const handleChange = (info: FileInfo) => {
         message.error('上传失败');
     }
 };
-
 const beforeUpload = (file: FileItem) => {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isJpgOrPng) {
@@ -133,19 +140,38 @@ const beforeUpload = (file: FileItem) => {
 
 const submit = () => {
     if (!isChange.value) return isChange.value = !isChange.value
-
-    changeUserInfo(state.formData)
-        .then((res: any) => {
-            if (res.data.code === 200) {
-                Object.assign(userStore.userInfo, state.formData)
-                getUserInfo()
-                message.success(res.data.msg)
-                isChange.value = false
-            }
-        })
-        .catch((err: any) => {
-            message.error('修改失败')
+    formRef.value
+        .validate().then(() => {
+            changeUserInfo(state.formData)
+                .then((res: any) => {
+                    if (res.data.code === 200) {
+                        Object.assign(userStore.userInfo, state.formData)
+                        getUserInfo()
+                        message.success(res.data.msg)
+                        isChange.value = false
+                    }
+                })
+                .catch((err: any) => {
+                    message.error('修改失败')
+                })
         })
 }
 
+const optionChange = (value: any) => {
+    console.log(value)
+    formData.value.clsId = value
+}
+
+const rules = {
+    nickname: [{ required: true, message: '请输入长度为6以下的昵称', max: 6, trigger: 'change' }],
+    email:[{ required: true, message: '请输入正确的邮箱格式', trigger: 'change' }],
+    clsName: [{ required: true, message: '请选择班级', trigger: 'blur' }],
+    sex: [{ required: true, message: '请选择性别', trigger: 'change' }],
+    phoneNumber: [{ required: true, message: '请输入正确格式的手机号码', max: 11, min: 11, trigger: 'blur', type: 'string' }],
+    school: [{ required: true, message: '请输入学校名称', trigger: 'change' }],
+};
+
+const resetForm = () => {
+    formRef.value.resetFields();
+};
 </script>

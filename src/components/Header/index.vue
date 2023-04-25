@@ -11,11 +11,15 @@
       </a-menu>
       <a-menu mode="horizontal" v-if="route.path.includes('courseDetail')">
         <a-menu-item key="base" @click="routeGoto('homeWork')">
-         我的作业
+          我的作业
         </a-menu-item>
+
         <a-menu-item key="pass" @click="routeGoto('myInformation')">
-          我的信息
+          <a-badge count="2">
+            我的信息
+          </a-badge>
         </a-menu-item>
+
       </a-menu>
     </div>
     <div class="avatar">
@@ -58,6 +62,7 @@ const routeGoto = (name: string) => {
   position: relative;
   width: 100%;
   height: 100%;
+
   .avatar {
     width: 130px;
     height: 100%;
@@ -67,10 +72,15 @@ const routeGoto = (name: string) => {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+
     span {
       color: #595959;
       font-weight: 500;
     }
   }
+}
+
+::v-deep .ant-badge-count, .ant-badge-dot, .ant-badge .ant-scroll-number-custom-component {
+    transform: translate(88%, -80%);
 }
 </style>

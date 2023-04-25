@@ -10,7 +10,7 @@
                     </template>
                     <a-list-item-meta :description="item.content">
                         <template #title>
-                            <a-badge dot="true">
+                            <a-badge :dot="courseStore.inforState(item.state)">
                                 <a href="https://www.antdv.com/">{{ item.theme }}</a>
                             </a-badge>
                         </template>
@@ -28,7 +28,7 @@
     <div class="popUps">
         <a-modal v-model:visible="visible" width="800px" :title="state.popData.theme">
             <template #footer>
-                <a-button key="back" @click="handleCancel" type="primary">已读</a-button>
+                <a-button key="back" @click="handleCancel" type="primary">确认</a-button>
             </template>
             <div style="display: flex;align-items: center;padding-bottom: 10px;">
                 <a-avatar :size="40" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
@@ -46,14 +46,15 @@
 
 <script lang="ts" setup>
 import { reactive, ref } from 'vue';
+import {setMessageState} from '@/network/course.js'
+import { useCourseStore} from '@/stores/course'
+const courseStore = useCourseStore()
 interface Props {
     data: object
 }
 const props = withDefaults(defineProps<Props>(), {
     data: () => {
-        return {
-
-        }
+        return {}
     }
 })
 
@@ -63,6 +64,13 @@ const state = reactive({
 
 const visible = ref(false)
 const openModal = (obj: any) => {
+    const params = {
+        id:obj.id
+    }
+    setMessageState(params)
+        .then((res:any) => {
+            console.log(res.data);
+        })
     state.popData = obj
     visible.value = true
 }

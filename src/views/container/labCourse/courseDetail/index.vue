@@ -5,9 +5,10 @@
 <script lang="ts" setup>
 import { getHomework, getMessage } from '@/network/course.js'
 import { ref, reactive } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
+import { useCourseStore } from '@/stores/course';
 const route = useRoute()
-const router = useRouter()
+const courseStore = useCourseStore()
 console.log(route.query);
 
 const data = reactive({
@@ -33,6 +34,9 @@ getMessage()
     .then((res: any) => {
         if (res.data.code === 200) {
             data.infoList = res.data.data
+            courseStore.informationList = res.data.data
+            console.log(courseStore.informationList,'courseStore.informationList');
+            
         } else {
             return Promise.reject(res.data.msg)
         }

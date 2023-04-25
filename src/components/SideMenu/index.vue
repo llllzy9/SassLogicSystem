@@ -34,7 +34,11 @@ import { reactive,ref } from 'vue';
 import { useRoute,useRouter } from 'vue-router';
 const router = useRouter()
 const route = useRoute()
-const selectedKeys = ref<string[]>(['home'])
+const selectedKeys = ref([route.name])
+console.log(route.name);
+
+
+
 
 const routeGoto = (path:string) => {
   router.push({

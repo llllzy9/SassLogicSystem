@@ -1,127 +1,117 @@
 <template>
-    <a-card style="width: 100%" :tab-list="tabListNoTitle" :active-tab-key="noTitleKey"
-        @tabChange="key => onTabChange(key, 'noTitleKey')">
-        <div v-if="noTitleKey === 'article'">
-            <a-list item-layout="horizontal" :data-source="data">
-                <template #renderItem="{ item }">
-                    <a-list-item>
-                        <template #actions>
-                            <a>编辑</a>
-                            <a>查看</a>
-                        </template>
-                        <a-list-item-meta description="虚拟仿真实验虚拟仿真实验虚拟仿真实验虚拟仿真实验">
-                            <template #title>
-                                <a href="https://www.antdv.com/">{{ item.title }}</a>
-                            </template>
-                            <!-- <template #avatar>
-                                <a-avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-                            </template> -->
-                        </a-list-item-meta>
-                    </a-list-item>
+    <a-tabs v-model:activeKey="activeKey" >
+        <a-tab-pane key="1" tab="全部">
+            <myTable :columns="columns" :openFullModal="openFullModal" :data-source="state.allHomeWork"/>
+        </a-tab-pane>
+        <a-tab-pane key="2" tab="已完成" force-render>
+            <myTable :columns="columns" />
+        </a-tab-pane>
+        <a-tab-pane key="3" tab="未完成">
+            <myTable :columns="columns" />
+        </a-tab-pane>
+    </a-tabs>
+    <div class="full-popUps">
+            <a-modal v-model:visible="fullVisible" :title="state.fullPopUps.title" width="100%" wrapClassName="full-modal">
+                <div class="top-info" :style="{ ...fullPopStyle }">
+                    <a-row>
+                        <a-col :span="2"><span>满分：{{ state.fullPopUps.score }}</span></a-col>
+                    </a-row>
+                    <a-row>
+                        <a-col :span="24">
+                            <p>作答时间：{{ state.fullPopUps.startTime }} ~ {{ state.fullPopUps.endTime }}</p>
+                        </a-col>
+                    </a-row>
+                </div>
+                <div class="topic-content"></div>
+                <template #footer>
+                    <a-button type="primary" value="large" @click="gotoExam">进入实验</a-button>
+                    <a-button value="large">上传提交</a-button>
                 </template>
-            </a-list>
+
+            </a-modal>
         </div>
-        <div v-else-if="noTitleKey === 'app'">
-            <a-list item-layout="horizontal" :data-source="data1">
-                <template #renderItem="{ item }">
-                    <a-list-item>
-                        <template #actions>
-                            <a>编辑</a>
-                            <a>查看</a>
-                        </template>
-                        <a-list-item-meta description="虚拟仿真实验虚拟仿真实验虚拟仿真实验虚拟仿真实验">
-                            <template #title>
-                                <a href="https://www.antdv.com/">{{ item.title }}</a>
-                            </template>
-                            <!-- <template #avatar>
-                                <a-avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-                            </template> -->
-                        </a-list-item-meta>
-                    </a-list-item>
-                </template>
-            </a-list>
-        </div>
-        <div v-else> <a-list item-layout="horizontal" :data-source="data">
-                <template #renderItem="{ item }">
-                    <a-list-item>
-                        <template #actions>
-                            <a>编辑</a>
-                            <a>查看</a>
-                        </template>
-                        <a-list-item-meta description="虚拟仿真实验虚拟仿真实验虚拟仿真实验虚拟仿真实验">
-                            <template #title>
-                                <a href="https://www.antdv.com/">{{ item.title }}</a>
-                            </template>
-                            <!-- <template #avatar>
-                                <a-avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-                            </template> -->
-                        </a-list-item-meta>
-                    </a-list-item>
-                </template>
-            </a-list></div>
-    </a-card>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-const tabList = [
-    {
-        key: 'tab1',
-        // tab: 'tab1',
-        slots: { tab: 'customRender' },
-    },
-    {
-        key: 'tab2',
-        tab: 'tab2',
-    },
-];
-const contentList = {
-    tab1: 'content1',
-    tab2: 'content2',
-};
-const tabListNoTitle = [
-    {
-        key: 'article',
-        tab: '全部',
-    },
-    {
-        key: 'app',
-        tab: '未完成',
-    },
-    {
-        key: 'project',
-        tab: '已完成',
-    },
-];
+import { ref, reactive } from 'vue';
+import { getHomework } from '@/network/course.js'
+import { message } from 'ant-design-vue';
+import myTable from '@/components/Table/index.vue'
 
-interface DataItem {
-    title: string;
-}
-const data: DataItem[] = [
+const columns = [
     {
-        title: '数字逻辑1',
+        title: '课程',
+        dataIndex: 'course',
     },
     {
-        title: '数字逻辑2',
+        title: '名称',
+        dataIndex: 'title',
     },
     {
-        title: '数字逻辑3',
+        title: '分数',
+        dataIndex: 'score',
+        slots: { customRender: 'text' }
     },
     {
-        title: '数字逻辑4',
+        title: '完成时间',
+        dataIndex: 'startTime',
+        slots: { customRender: 'time' }
     },
-];
-const key = ref('tab1');
-const noTitleKey = ref('app');
-
-const onTabChange = (value: string, type: string) => {
-    console.log(value, type);
-    if (type === 'key') {
-        key.value = value;
-    } else if (type === 'noTitleKey') {
-        noTitleKey.value = value;
+    {
+        title: '状态',
+        dataIndex: 'completionStatus',
+        slots: { customRender: 'tags' }
+    },
+    {
+        title: '内容描述',
+        dataIndex: 'content'
+    },
+    {
+        title: '操作',
+        dataIndex: 'operation',
+        slots: { customRender: 'operation' },
     }
-};
+]
+const fullPopStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItem: 'center',
+    justifyContent: 'space-around',
+    height: '10%',
+    borderBottom: '2px dashed #eee',
+    fontSize: '18px'
+}
+const state = reactive({
+    allHomeWork:[],
+    fullPopUps: {
+        title: '',
+        score: '',
+        startTime: '',
+        endTime:'',
+        content:''
+    }
+})
+const loading = ref()
+getHomework()
+    .then((res: any) => {
+        console.log(res.data);
+        if(res.data.code === 200){
+            message.success('获取成功')
+            state.allHomeWork = res.data.data
+            loading.value = false
+        }
+    })
+const activeKey = ref('1')
+
+const fullVisible = ref<boolean>(false)
+function openFullModal(obj: any) {
+    state.fullPopUps = obj
+    fullVisible.value = true
+}
+
+function gotoExam() {
+    window.open('http://106.14.20.78:8080/szljTest','_brank')
+}
 </script>
 
 <style lang="scss" scoped></style>

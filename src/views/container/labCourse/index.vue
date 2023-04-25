@@ -12,7 +12,7 @@
 
 <script lang="ts" setup>
 import CardList from '@/components/CardList/index.vue'
-import { getAllCourse, getHomework, getStudentCourse } from '@/network/course.js'
+import { getStudentCourse } from '@/network/course.js'
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 const router = useRouter()
@@ -34,7 +34,6 @@ const state = reactive({
 
 
 //打开弹窗
-const visible = ref<boolean>(false)
 function openModal(obj: any, i: number, str: string) {
     if (str === 'exam') {
         window.open('https://www.baidu.com', '_blank');
@@ -43,37 +42,8 @@ function openModal(obj: any, i: number, str: string) {
             name: 'courseDetail',
             query: obj
         })
-        // console.log(obj);
-        // let params = {
-        //     courseId: obj.id
-        // }
-        // getHomework(params)
-        //     .then((res: any) => {
-        //         if (res.data.code === 200) {
-        //             state.popUpsData = obj
-        //             state.popUpsData.homeworkList = res.data.data
-        //             visible.value = true
-        //         } else {
-        //             return Promise.reject(res.data.msg)
-        //         }
-        //     }).catch((err: any) => {
-        //         console.log(err)
-        //     })
     }
 }
-const handleCancel = () => {
-    visible.value = false;
-    console.log('guanbi');
-};
-
-//打开全屏弹窗
-const fullVisible = ref<boolean>(false)
-function openFullModal(obj: any) {
-    console.log(obj);
-    state.fullPopUps = obj
-    fullVisible.value = true
-}
-
 </script>
 
 <style lang="scss">
@@ -99,25 +69,6 @@ function openFullModal(obj: any) {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
         row-gap: 30px;
-    }
-}
-
-.full-modal {
-    .ant-modal {
-        max-width: 100%;
-        top: 0;
-        padding-bottom: 0;
-        margin: 0;
-    }
-
-    .ant-modal-content {
-        display: flex;
-        flex-direction: column;
-        height: calc(100vh);
-    }
-
-    .ant-modal-body {
-        flex: 1;
     }
 }
 </style>

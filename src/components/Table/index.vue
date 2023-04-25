@@ -1,35 +1,27 @@
 <template>
-    <a-table :columns="columns" :data-source="dataSource">
-        <template #name="{ text }">
-            <a>{{ text }}</a>
-        </template>
-        <template #tags="{ text: tags }">
-            <span>
-                <a-tag v-for="tag in tags" :key="tag"
-                    :color="tag === 'loser' ? 'volcano' : tag.length > 5 ? 'geekblue' : 'green'">
-                    {{ tag.toUpperCase() }}
-                </a-tag>
-            </span>
-        </template>
-        <template #action="{ record }">
-            <span v-for="(item,index) in record.action" :key="index">
-                <a-button type="primary" shape="round" @click="item.func(record)">
-                  {{ item.text }}
-                    <down-outlined />
-                </a-button>
-            </span>
-        </template>
-    </a-table>
+  <a-table :columns="columns" :data-source="dataSource">
+    <template #tags="{ record }">
+      <span>
+        <a-tag :color="record.completionStatus ? 'green' : 'red'">
+          {{ record.completionStatus ? '完成' : '未完成' }}
+        </a-tag>
+      </span>
+    </template>
+    <template #operation="{ record }">
+      <a-button type="primary" @click="openFullModal(record)">开始</a-button>
+    </template>
+  </a-table>
 </template>
 
 <script setup lang="ts">
 
 interface Props {
-    dataSource: Array<any>,
-    columns: Array<any>,
+  dataSource: Array<any>,
+  columns: Array<any>,
+  openFullModal: (obj: any) => void
 }
 const props = withDefaults(defineProps<Props>(), {
-    dataSource: () => [
+  dataSource: () => [
     {
       key: '1',
       name: 'John Brown',

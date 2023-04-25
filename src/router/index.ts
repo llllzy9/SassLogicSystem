@@ -68,7 +68,26 @@ const router = createRouter({
           meta: {
             title: '课程详情'
           },
-          component: () => import('../views/container/labCourse/courseDetail/index.vue')
+          redirect:'courseDetail/homeWork',
+          component: () => import('../views/container/labCourse/courseDetail/index.vue'),
+          children:[
+            {
+              path:'homeWork',
+              name:'homeWork',
+              meta:{
+                title:'我的作业'
+              },
+              component:() => import('../views/container/labCourse/homeWork/index.vue')
+            },
+            {
+              path:'myInformation',
+              name:'myInformation',
+              meta:{
+                title:'我的信息'
+              },
+              component:() => import('../views/container/labCourse/myInformation/index.vue')
+            }
+          ]
         },
         {
           path: 'jobInfo',

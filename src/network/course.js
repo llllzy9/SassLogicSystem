@@ -7,9 +7,33 @@ export function getAllCourse() {
     })
 }
 
-export function getHomework() {
+export function getStudentCourse() {
+    return request({
+        url:'/student/getStudentCourse',
+        method:'get',
+    })
+}
+
+export function getHomework(data) {
     return request({
         url:'/student/getHomework',
-        method:'get'
+        method:'get',
+        params:data
+    })
+}
+
+export function submitHomework(data) {
+    return request({
+        url:'/student/submitHomework',
+        method:'post',
+        data:data
+    })
+}
+
+export function modifyHomework(data) {
+    return request({
+        url:'/student/modifyHomework',
+        method:'post',
+        data:data
     })
 }

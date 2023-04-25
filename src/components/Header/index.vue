@@ -2,11 +2,19 @@
   <div class="head-wrap">
     <div class="menu">
       <a-menu mode="horizontal" v-if="route.path.includes('actManage')">
-        <a-menu-item key="base" @click="routeGoto('/container/actManage/basicInfo')">
+        <a-menu-item key="base" @click="routeGoto('basicInfo')">
           基本资料
         </a-menu-item>
-        <a-menu-item key="pass" @click="routeGoto('/container/actManage/passManage')">
+        <a-menu-item key="pass" @click="routeGoto('passManage')">
           密码管理
+        </a-menu-item>
+      </a-menu>
+      <a-menu mode="horizontal" v-if="route.path.includes('courseDetail')">
+        <a-menu-item key="base" @click="routeGoto('homeWorl')">
+         我的作业
+        </a-menu-item>
+        <a-menu-item key="pass" @click="routeGoto('myInformation')">
+          我的信息
         </a-menu-item>
       </a-menu>
     </div>
@@ -38,23 +46,19 @@ const userStore = useUserStore()
 const route = useRoute()
 const router = useRouter()
 
-const routeGoto = (url: string) => {
+const routeGoto = (name: string) => {
   router.push({
-    path: url
+    name: name
   })
 }
-
-
-
 </script>
 
 <style lang="scss" scoped>
 .head-wrap {
   position: relative;
   width: 100%;
-
+  height: 100%;
   .avatar {
-    
     width: 130px;
     height: 100%;
     position: absolute;

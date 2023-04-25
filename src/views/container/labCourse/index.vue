@@ -1,6 +1,10 @@
 <template>
     <div class="course-container">
+        <div class="title-wrap">
+            {{ '我学的课：' }}
+        </div>
         <div class="content">
+            <a-skeleton active :loading="loading" />
             <CardList :dataList="state.dataList" :openModal="openModal" />
         </div>
         <div class="popUps">
@@ -12,8 +16,8 @@
                             gap: '30px',
                             fontSize: '14px'
                         }">
-                        <h2>{{ state.popUpsData.title }}</h2>
-                        <span>任课老师：{{ state.popUpsData.teacher }}</span>
+                        <h2>{{ state.popUpsData.course }}</h2>
+                        <span>任课老师：{{ state.popUpsData.nickname }}</span>
                         <span>班级：{{ state.popUpsData.class }}</span>
                         <span>开课时间：{{ state.popUpsData.startTime }}</span>
                     </div>
@@ -21,18 +25,19 @@
                 <template #footer>
                     <a-button key="back" @click="handleCancel">取消</a-button>
                 </template>
-                <myTable :dataSource="state.dataList[popIndex].dataSource" :columns="state.columns"></myTable>
+                <myTable :dataSource="state.popUpsData.homeworkList" :columns="state.columns" :openFullModal="openFullModal"></myTable>
             </a-modal>
         </div>
         <div class="full-popUps">
             <a-modal v-model:visible="fullVisible" :title="state.fullPopUps.title" width="100%" wrapClassName="full-modal">
-                <div class="top-info" :style="{...fullPopStyle}">
+                <div class="top-info" :style="{ ...fullPopStyle }">
                     <a-row>
-                        <a-col :span="2"><span>题量：{{ state.fullPopUps.topicVolume }}</span></a-col>
-                        <a-col :span="2"><span>满分：{{ state.fullPopUps.grades }}</span></a-col>
+                        <a-col :span="2"><span>满分：{{ state.fullPopUps.score }}</span></a-col>
                     </a-row>
                     <a-row>
-                        <a-col :span="24"><p>作答时间：{{ state.fullPopUps.startTime }}</p></a-col>
+                        <a-col :span="24">
+                            <p>作答时间：{{ state.fullPopUps.startTime }} ~ {{ state.fullPopUps.endTime }}</p>
+                        </a-col>
                     </a-row>
                 </div>
                 <div class="topic-content"></div>
@@ -51,109 +56,25 @@
 <script lang="ts" setup>
 import CardList from '@/components/CardList/index.vue'
 import myTable from '@/components/Table/index.vue'
-import { getAllCourse,getHomework } from '@/network/course.js'
+import { getAllCourse, getHomework, getStudentCourse } from '@/network/course.js'
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 const router = useRouter()
-getAllCourse()
-    .then((res: any) => {
-        console.log(res.data);
-    })
-    getHomework()
-    .then((res:any)=>{
-        console.log(res.data);
-        
-    })
+const loading = ref<boolean>(false)
+loading.value = true
+getStudentCourse().then((res: any) => {
+    if (res.data.code === 200) {
+        console.log(res.data.data)
+        state.dataList = res.data.data
+        loading.value = false
+    } else {
+        return Promise.reject(res.data.msg)
+    }
+}).catch((err: any) => console.log(err))
+
 const state = reactive({
     //课程数据
-    dataList: [
-        {
-            image: 'https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png',
-            title: '计算机网络',
-            teacher: '溪利亚',
-            startTime: '2022-01-22',
-            class: '计算机科学与技术1907',
-            //表格数据
-            dataSource: [
-                {
-                    key: '1',
-                    title: '第一章上机作业',
-                    createTime: '2023-01-22',
-                    tags: ['未完成'],
-                    topicVolume: 2,
-                    grades: 100,
-                    action: [
-                        {
-                            text: '开始',
-                            func: openFullModal
-                        }
-                    ]
-                },
-                {
-                    key: '2',
-                    title: '第七章上机作业',
-                    createTime: '2023-02-22',
-                    tags: ['未完成'],
-                    topicVolume: 2,
-                    grades: 100,
-                    action: [
-                        {
-                            text: '开始',
-                            func: openFullModal
-                        }
-                    ]
-                },
-            ],
-        },
-        {
-            image: 'https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png',
-            title: '数字逻辑',
-            teacher: '溪利亚',
-            startTime: '2022-01-22',
-            class: '计算机科学与技术',
-            //表格数据
-            dataSource: [
-                {
-                    key: '1',
-                    title: '第三章上机作业',
-                    createTime: '2023-01-22',
-                    tags: ['未完成'],
-                    topicVolume: 2,
-                    grades: 100,
-                    action: [
-                        {
-                            text: '开始',
-                            func: openFullModal
-                        }
-                    ]
-                },
-            ],
-        },
-        {
-            image: 'https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png',
-            title: '单片机',
-            teacher: '溪利亚',
-            startTime: '2022-01-22',
-            class: '计算机科学与1技术',
-            //表格数据
-            dataSource: [
-                {
-                    key: '1',
-                    title: '第六章上机作业',
-                    createTime: '2023-01-22',
-                    tags: ['未完成'],
-                    topicVolume: 2,
-                    grades: 100,
-                    action: [
-                        {
-                            text: '开始',
-                            func: openFullModal
-                        }
-                    ]
-                },
-            ],
-        },
-    ],
+    dataList: [],
     //表格属性
     columns: [
         {
@@ -161,63 +82,87 @@ const state = reactive({
             dataIndex: 'title',
         },
         {
+            title: '分数',
+            dataIndex: 'score'
+        },
+        {
             title: '创建时间',
-            dataIndex: 'createTime',
+            dataIndex: 'startTime',
         },
         {
             title: '状态',
-            dataIndex: 'tags',
-            slots: { customRender: 'tags' },
+            dataIndex: 'completionStatus',
+            slots: { customRender: 'tags' }
         },
         {
-            title: '操作',
-            dataIndex: 'action',
-            slots: { customRender: 'action' },
+            title: '内容描述',
+            dataIndex: 'content'
         },
+        {
+        title: '操作',
+        dataIndex: 'operation',
+        slots: { customRender: 'operation' },
+      },
     ],
     //弹窗数据
     popUpsData: {
-        title: '',
-        teacher: '',
+        course: '',
+        nickname: '',
         class: '',
-        startTime: ''
+        startTime: '',
+        homeworkList: []
     },
     //大弹窗数据
     fullPopUps: {
         title: '',
-        topicVolume: '',
-        grades: '',
-        startTime: ''
+        score: '',
+        startTime: '',
+        endTime:'',
+        content:''
     }
 })
 
 const fullPopStyle = {
-    display:'flex',
-    flexDirection:'column',
-    alignItem:'center',
-    justifyContent:'space-around',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItem: 'center',
+    justifyContent: 'space-around',
     height: '10%',
     borderBottom: '2px dashed #eee',
-    fontSize:'18px'
+    fontSize: '18px'
 }
 
 //打开弹窗
 const visible = ref<boolean>(false)
 const popIndex = ref<number>(0)
 function openModal(obj: any, i: number, str: string) {
-    console.log(obj);
-    
-    if(str === 'exam'){
-    popIndex.value = i
-    state.popUpsData = obj
-    visible.value = true
-    }else if(str === 'detail'){
+    if (str === 'exam') {
         router.push({
-            name:'courseDetail',
-            query:obj
+            name: 'courseDetail',
+            query: obj
         })
+    } else if (str === 'detail') {
+        router.push({
+            name: 'courseDetail',
+            query: obj
+        })
+        // console.log(obj);
+        let params = {
+            courseId: obj.id
+        }
+        getHomework(params)
+            .then((res: any) => {
+                if (res.data.code === 200) {
+                    state.popUpsData = obj
+                    state.popUpsData.homeworkList = res.data.data
+                    visible.value = true
+                } else {
+                    return Promise.reject(res.data.msg)
+                }
+            }).catch((err: any) => {
+                console.log(err)
+            })
     }
-
 }
 const handleCancel = () => {
     visible.value = false;
@@ -238,6 +183,14 @@ function openFullModal(obj: any) {
 .course-container {
     display: flex;
     flex-direction: column;
+
+    .title-wrap {
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #2d2d22;
+    }
+
     /* align-items: baseline; */
 
     .form-wrap {
@@ -269,4 +222,5 @@ function openFullModal(obj: any) {
     .ant-modal-body {
         flex: 1;
     }
-}</style>
+}
+</style>

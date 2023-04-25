@@ -2,15 +2,16 @@
     <div v-for="(card,index) in dataList" :key="index" class="list-container">
         <a-card hoverable style="width: 300px">
             <template #cover>
-                <img alt="example" :src="card.image">
+                <img alt="example" :src="userStore.courseImg(card.avatar)">
             </template>
             <template class="ant-card-actions" #actions>
                 <span @click="openModal(card,index,'exam')">进入实验</span>
                 <span @click="openModal(card,index,'detail')">查看详情</span>
             </template>
-            <a-card-meta :title="card.title">
+            <a-card-meta :title="card.course">
                 <template #description>
-                    <p>任课老师：{{card.teacher}}</p>
+                    <p>实验操作平台：{{ card.experimentalPlatform }}</p>
+                    <p>任课老师：{{card.nickname}}</p>
                     <p>开课时间：{{card.startTime}}</p>
                     <p>参加班级：{{card.class}}</p>
                 </template>
@@ -20,15 +21,14 @@
 </template>
 
 <script lang="ts" setup>
-import { getAllCourse } from '../../network/course';
-import { ref, reactive } from 'vue';
-import { useRouter } from 'vue-router';
-
+import {useUserStore} from '@/stores/user.ts'
+const userStore = useUserStore()
 
 interface Info{
-    image:string
-    title:string
-    teacher:string
+    avatar:string
+    course:string
+    experimentalPlatform:string
+    nickname:string
     startTime:string
     class:string
 }
@@ -37,15 +37,7 @@ interface Props{
     openModal?:(obj:any,i:number,str:string)=> void
 }
 const props = withDefaults(defineProps<Props>(), {
-    dataList:() => [
-        {
-            image:'https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png',
-            title:'数字逻辑',
-            teacher:'溪利亚',
-            startTime:'2022-01-22',
-            class:'计算机科学与技术'
-        }
-    ],
+    dataList:() => [],
     openModal:(i,str) => {
         console.log(i,str);
     }

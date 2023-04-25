@@ -30,9 +30,12 @@ export const useUserStore = defineStore('user', () => {
         username:''
     })
 
-    const avatarImg = ():string => `http://154.204.60.38:8000/img/user/${userInfo.username}/${userInfo.avatar}` 
+    const avatarImg = (avatar?:string):string => `http://154.204.60.38:8000/img/user/${userInfo.username}/${avatar || userInfo.avatar}` 
+    const courseImg = (avatar?:string):string => `http://154.204.60.38:8000/img/user/course/${avatar}`  
+
     return {
         userInfo,
-        avatarImg
+        avatarImg,
+        courseImg
     }
 })

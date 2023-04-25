@@ -10,7 +10,7 @@
         </a-menu-item>
       </a-menu>
       <a-menu mode="horizontal" v-if="route.path.includes('courseDetail')">
-        <a-menu-item key="base" @click="routeGoto('homeWorl')">
+        <a-menu-item key="base" @click="routeGoto('homeWork')">
          我的作业
         </a-menu-item>
         <a-menu-item key="pass" @click="routeGoto('myInformation')">

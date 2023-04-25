@@ -37,3 +37,10 @@ export function modifyHomework(data) {
         data:data
     })
 }
+
+export function getMessage() {
+    return request({
+        url:'/student/getMessage',
+        methdo:'get'
+    })
+}

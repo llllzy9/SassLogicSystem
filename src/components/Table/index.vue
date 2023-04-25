@@ -7,6 +7,9 @@
         </a-tag>
       </span>
     </template>
+    <template #text="{record}">
+      <a>{{ record.startTime }} ~ {{ record.endTime }}</a>
+    </template>
     <template #operation="{ record }">
       <a-button type="primary" @click="openFullModal(record)">开始</a-button>
     </template>

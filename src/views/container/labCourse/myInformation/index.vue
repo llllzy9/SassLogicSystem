@@ -5,7 +5,7 @@
 
                 <a-list-item>
                     <template #actions>
-                        <a>删除</a>
+                        <a @click="deleteInfo(item.id)">删除</a>
                         <a @click="openModal(item)">查看</a>
                     </template>
                     <a-list-item-meta :description="item.content">
@@ -18,7 +18,10 @@
                             <a-avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
                         </template>
                     </a-list-item-meta>
-                    <div style="color:#aaa">{{ '2023-04-16 14:32' }}</div>
+                    <div style="color:#aaa">
+                        <span style="margin-right: .5rem;">{{ '2023-04-16 14:32' }}</span>
+                        <span v-show="!courseStore.inforState(item.state)">{{ '已读' }}</span>
+                    </div>
                 </a-list-item>
 
             </template>
@@ -45,9 +48,11 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue';
-import {setMessageState} from '@/network/course.js'
-import { useCourseStore} from '@/stores/course'
+import { reactive, ref, createVNode } from 'vue';
+import { setMessageState } from '@/network/course.js'
+import { useCourseStore } from '@/stores/course'
+import { Modal } from 'ant-design-vue';
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 const courseStore = useCourseStore()
 interface Props {
     data: object
@@ -65,10 +70,10 @@ const state = reactive({
 const visible = ref(false)
 const openModal = (obj: any) => {
     const params = {
-        id:obj.id
+        id: obj.id
     }
     setMessageState(params)
-        .then((res:any) => {
+        .then((res: any) => {
             console.log(res.data);
         })
     state.popData = obj
@@ -78,4 +83,20 @@ const handleCancel = () => {
     visible.value = false;
     console.log('guanbi');
 };
+
+function deleteInfo(id: number) {
+    Modal.confirm({
+        title: () => '你确定要删除这个信息吗?',
+        icon: () => createVNode(ExclamationCircleOutlined),
+        okText: () => '是的',
+        okType: 'danger',
+        cancelText: () => '取消',
+        onOk() {
+            courseStore.deleteInfor(id)
+        },
+        onCancel() {
+            console.log('Cancel');
+        },
+    });
+}
 </script>

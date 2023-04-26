@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { message } from 'ant-design-vue';
 
 
 const router = createRouter({
@@ -107,7 +108,10 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if (to.path === '/login') return next()
   let token = sessionStorage.getItem('token')
-  if (!token) return next('/login')
+  if (!token) {
+    message.error('token已失效,请重新登录')
+    return next('/login')
+  }
   next()
 })
 

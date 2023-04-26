@@ -68,3 +68,10 @@ export function distributeHomework(data) {
         data:data
     })
 }
+
+export function getDistributeHomework() {
+    return request({
+        url:'/teacher/getDistributeHomework',
+        method:'get'
+    })
+}

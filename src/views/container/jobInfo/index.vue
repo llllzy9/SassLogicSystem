@@ -27,16 +27,17 @@
                 <a-button type="primary" value="large" @click="gotoExam">进入实验</a-button>
                 <a-button value="large">上传提交</a-button>
             </template>
-
         </a-modal>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, reactive } from 'vue';
-import { getHomework } from '@/network/course.js';
+import { getHomework, getDistributeHomework } from '@/network/course.js';
 import { message } from 'ant-design-vue';
 import myTable from '@/components/Table/index.vue'
+import { useUserStore } from '@/stores/user'
+const userStore = useUserStore()
 
 const columns = [
     {
@@ -55,7 +56,7 @@ const columns = [
     {
         title: '完成时间',
         dataIndex: 'startTime',
-        align:'center',
+        align: 'center',
         slots: { customRender: 'time' }
     },
     {
@@ -94,23 +95,64 @@ const state = reactive({
         content: ''
     }
 })
+
+
 const loading = ref(true)
-getHomework()
-    .then((res: any) => {
-        console.log(res.data);
-        if (res.data.code === 200) {
-            message.success('获取成功')
-            state.allHomeWork = res.data.data
-            dataClassification(res.data.data)
-            loading.value = false
+
+function getData() {
+    return new Promise((reslove, reject) => {
+        if (userStore.isTeacher) {
+            console.log('获取老师数据')
+            getDistributeHomework()
+                .then((res: any) => {
+                    if (res.data.code === 200) {
+                        reslove(res.data.data)
+                    } else reject(res.data.msg)
+                })
+        } else {
+            console.log('获取学生数据')
+            getHomework()
+                .then((res: any) => {
+                    if (res.data.code === 200) {
+                        reslove(res.data.data)
+                    } else reject(res.data.msg)
+                })
         }
     })
+}
+
+getData()
+    .then((res: any) => {
+        message.success('获取成功')
+        state.allHomeWork = res
+        dataClassification(res)
+        loading.value = false
+    })
+    .catch((err: any) => {
+        message.error(err)
+    })
+// getHomework()
+//     .then((res: any) => {
+//         console.log(res.data);
+//         if (res.data.code === 200) {
+//             message.success('获取成功')
+//             state.allHomeWork = res.data.data
+//             dataClassification(res.data.data)
+//             loading.value = false
+//         }
+//     })
 const activeKey = ref('1')
 
 const fullVisible = ref<boolean>(false)
 function openFullModal(obj: any) {
-    state.fullPopUps = obj
-    fullVisible.value = true
+    if (userStore.isTeacher) {
+        console.log(obj)
+
+        // fullVisible.value = true
+    } else {
+        state.fullPopUps = obj
+        fullVisible.value = true
+    }
 }
 
 function gotoExam() {
@@ -119,9 +161,9 @@ function gotoExam() {
 
 function dataClassification(array: any) {
     array.filter((item: any) => {
-        if(item.completionStatus){
+        if (item.completionStatus) {
             state.doneHomeWork.push(item)
-        }else{
+        } else {
             state.noneHomeWork.push(item)
         }
     })

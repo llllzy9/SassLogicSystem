@@ -1,6 +1,8 @@
 import axios from 'axios'
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
+import { useUserStore } from '@/stores/user'
+const userStore = useUserStore()
 
 export function request(config){
     let instance = axios.create({
@@ -10,7 +12,10 @@ export function request(config){
 
     instance.interceptors.request.use(config => {
         NProgress.start()
-        if(config.url === '/user/login' || config.url === '/user/register') return config
+        if(userStore.isTeacher == undefined | null){
+            console.log('重置角色权限');
+            userStore.rolesState()
+        }
         config.headers.Authorization = 'Bearer ' + sessionStorage.getItem('token')
         return config
     })

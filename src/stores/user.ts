@@ -50,6 +50,5 @@ export const useUserStore = defineStore('user', () => {
         avatarImg,
         rolesState,
         isTeacher
-
     }
 })

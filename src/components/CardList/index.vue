@@ -5,9 +5,9 @@
                 <img alt="example" :src="courseStore.courseImg(card.avatar)">
             </template>
             <template class="ant-card-actions" #actions>
-                <span @click="openModal(card,index,'exam')">进入实验</span>
+                <span @click="openModal('exam',card,index,)">进入实验</span>
                 <a-badge :dot="courseStore.inforNum()>0">
-                <a @click="openModal(card,index,'detail')">查看详情</a>
+                <a @click="openModal('detail',card,index,)">查看详情</a>
                 </a-badge>
             </template>
             <a-card-meta :title="card.course">
@@ -36,7 +36,7 @@ interface Info{
 }
 interface Props{
     dataList?:Info[]
-    openModal?:(obj:any,i:number,str:string)=> void
+    openModal?:(str:string,obj:any,i:number,)=> void
 }
 const props = withDefaults(defineProps<Props>(), {
     dataList:() => [],

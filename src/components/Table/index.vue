@@ -2,25 +2,36 @@
   <a-table :columns="columns" :data-source="dataSource">
     <template #tags="{ record }">
       <span>
-        <a-tag :color="record.completionStatus ? 'green' : 'red'">
+        <a-tag :color="record.completionStatus ? 'green' : 'warning'" v-if="!userStore.isTeacher">
           {{ record.completionStatus ? '完成' : '未完成' }}
+        </a-tag>
+        <a-tag :color="(formatter(record)) ? 'red' : 'processing'">
+          {{ (formatter(record)) ? '已截至' : '未截至' }}
         </a-tag>
       </span>
     </template>
-    <template #text="{text}">
-    <a>{{ text }}</a>
+    <template #text="{ text }">
+      <a>{{ text }}</a>
     </template>
-    <template #time="{record}">
+    <template #time="{ record }">
       <span>{{ record.startTime }} ~ {{ record.endTime }}</span>
     </template>
     <template #operation="{ record }">
-      <a-button type="primary" @click="openFullModal(record)">开始</a-button>
+      <a-row>
+      <a-col :span="5">
+        <a-button type="primary" @click="openFullModal(record)">{{userStore.isTeacher? '批改' : '开始'}}</a-button>
+      </a-col>
+      <a-col :span="6" v-if="userStore.isTeacher" :offset="2">
+        <a-button type="danger" @click="handleDelete(record)">删除</a-button>
+      </a-col>
+    </a-row>
     </template>
   </a-table>
 </template>
 
 <script setup lang="ts">
-
+import { useUserStore } from '@/stores/user'
+const userStore = useUserStore()
 interface Props {
   dataSource: Array<any>,
   columns: Array<any>,
@@ -80,4 +91,16 @@ const props = withDefaults(defineProps<Props>(), {
     },
   ],
 })
+
+function formatter(record: any) {
+  const deadline = new Date(record.endTime).getTime()
+  const timeNow = new Date().getTime()
+  if (timeNow > deadline) return true
+  else return false
+}
+
+function handleDelete(record) {
+  console.log(record);
+  
+}
 </script>

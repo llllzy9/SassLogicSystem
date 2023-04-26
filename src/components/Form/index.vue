@@ -3,6 +3,7 @@
     <a-form
     ref="formRef"
     :rules="formRules"
+    :model="formData"
     >
         <a-row wrap="true">
             <template v-for="item in formItem" :key="item.label">
@@ -23,13 +24,13 @@
                             <a-range-picker v-model="formData[`${item.field}`]">
                             </a-range-picker>
                         </template>
-                        <template v-eles-if="item.type === 'upload'">
+                        <!-- <template v-eles-if="item.type === 'upload'">
                             <a-upload
                             v-model:file-list="formData[`${item.field}`]"
                             >
 
                             </a-upload>
-                        </template>
+                        </template> -->
                     </a-form-item>
                 </a-col>
             </template>
@@ -46,6 +47,10 @@ import { reactive } from 'vue';
 
 type IForrmType = 'input' | 'password' | 'select' | 'datepicker' | 'upload'
 
+interface MyObject{
+    [key:string]:any
+}
+
 interface IFormItem {
     field: string
     type: IForrmType
@@ -57,9 +62,22 @@ interface IFormItem {
 }
 
 interface Props {
-    formData: Record<string, any>
-    formItem: Array
+    formData: MyObject
+    formItem: IFormItem[]
     formRules:object
 }
-const props = withDefaults(defineProps<Props>(), {})
+const props = withDefaults(defineProps<Props>(), {
+    formItem:() => [
+        {
+            field:'test',
+            type:'input',
+            label:'text',
+        }
+    ],
+    formData:() => {
+        return {
+            test:''
+        }
+    }
+})
 </script>

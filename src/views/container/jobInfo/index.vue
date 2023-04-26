@@ -1,35 +1,35 @@
 <template>
-    <a-tabs v-model:activeKey="activeKey" >
+    <a-tabs v-model:activeKey="activeKey">
         <a-tab-pane key="1" tab="全部">
-            <myTable :columns="columns" :openFullModal="openFullModal" :data-source="state.allHomeWork"/>
+            <myTable :columns="columns" :openFullModal="openFullModal" :data-source="state.allHomeWork" />
         </a-tab-pane>
         <a-tab-pane key="2" tab="已完成" force-render>
-            <myTable :columns="columns" />
+            <myTable :columns="columns" :data-source="state.doneHomeWork" :openFullModal="openFullModal" />
         </a-tab-pane>
         <a-tab-pane key="3" tab="未完成">
-            <myTable :columns="columns" />
+            <myTable :columns="columns" :data-source="state.noneHomeWork" :openFullModal="openFullModal" />
         </a-tab-pane>
     </a-tabs>
     <div class="full-popUps">
-            <a-modal v-model:visible="fullVisible" :title="state.fullPopUps.title" width="100%" wrapClassName="full-modal">
-                <div class="top-info" :style="{ ...fullPopStyle }">
-                    <a-row>
-                        <a-col :span="2"><span>满分：{{ state.fullPopUps.score }}</span></a-col>
-                    </a-row>
-                    <a-row>
-                        <a-col :span="24">
-                            <p>作答时间：{{ state.fullPopUps.startTime }} ~ {{ state.fullPopUps.endTime }}</p>
-                        </a-col>
-                    </a-row>
-                </div>
-                <div class="topic-content"></div>
-                <template #footer>
-                    <a-button type="primary" value="large" @click="gotoExam">进入实验</a-button>
-                    <a-button value="large">上传提交</a-button>
-                </template>
+        <a-modal v-model:visible="fullVisible" :title="state.fullPopUps.title" width="100%" wrapClassName="full-modal">
+            <div class="top-info" :style="{ ...fullPopStyle }">
+                <a-row>
+                    <a-col :span="2"><span>满分：{{ state.fullPopUps.score }}</span></a-col>
+                </a-row>
+                <a-row>
+                    <a-col :span="24">
+                        <p>作答时间：{{ state.fullPopUps.startTime }} ~ {{ state.fullPopUps.endTime }}</p>
+                    </a-col>
+                </a-row>
+            </div>
+            <div class="topic-content"></div>
+            <template #footer>
+                <a-button type="primary" value="large" @click="gotoExam">进入实验</a-button>
+                <a-button value="large">上传提交</a-button>
+            </template>
 
-            </a-modal>
-        </div>
+        </a-modal>
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -55,6 +55,7 @@ const columns = [
     {
         title: '完成时间',
         dataIndex: 'startTime',
+        align:'center',
         slots: { customRender: 'time' }
     },
     {
@@ -82,22 +83,25 @@ const fullPopStyle = {
     fontSize: '18px'
 }
 const state = reactive({
-    allHomeWork:[],
+    allHomeWork: [],
+    doneHomeWork: [],
+    noneHomeWork: [],
     fullPopUps: {
         title: '',
         score: '',
         startTime: '',
-        endTime:'',
-        content:''
+        endTime: '',
+        content: ''
     }
 })
-const loading = ref()
+const loading = ref(true)
 getHomework()
     .then((res: any) => {
         console.log(res.data);
-        if(res.data.code === 200){
+        if (res.data.code === 200) {
             message.success('获取成功')
             state.allHomeWork = res.data.data
+            dataClassification(res.data.data)
             loading.value = false
         }
     })
@@ -110,7 +114,17 @@ function openFullModal(obj: any) {
 }
 
 function gotoExam() {
-    window.open('http://106.14.20.78:8080/szljTest','_brank')
+    window.open('http://106.14.20.78:8080/szljTest', '_brank')
+}
+
+function dataClassification(array: any) {
+    array.filter((item: any) => {
+        if(item.completionStatus){
+            state.doneHomeWork.push(item)
+        }else{
+            state.noneHomeWork.push(item)
+        }
+    })
 }
 </script>
 

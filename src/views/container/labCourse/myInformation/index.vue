@@ -1,8 +1,10 @@
 <template>
+    <div class="btn-wrap" v-if="userStore.isTeacher">
+        <a-button type="primary" @click="publishInformation">发布信息</a-button>
+    </div>
     <div class="info-list">
         <a-list item-layout="horizontal" :data-source="data.infoList" :loading="data.loading">
             <template #renderItem="{ item }">
-
                 <a-list-item>
                     <template #actions>
                         <a @click="deleteInfo(item.id)">删除</a>
@@ -29,7 +31,7 @@
     </div>
 
     <div class="popUps">
-        <a-modal v-model:visible="visible" width="800px" :title="state.popData.theme">
+        <a-modal v-model:visible="inforVisible" width="800px" :title="state.popData.theme">
             <template #footer>
                 <a-button key="back" @click="handleCancel" type="primary">确认</a-button>
             </template>
@@ -45,14 +47,43 @@
 
         </a-modal>
     </div>
+
+    <div class="modal">
+        <a-modal v-model:visible="visible" width="600px" title="发布信息">
+            <template #footer>
+            </template>
+            <a-form ref="formRef" :model="state.formState" :rules="rules" :label-col="{ span: 4 }"
+                :wrapper-col="{ span: 14 }">
+                <a-form-item label="主题" name="theme">
+                    <a-input v-model:value="state.formState.theme" placeholder="请输入标题" />
+                </a-form-item>
+                <a-form-item label="班级" name="clsIds">
+                    <a-select v-model:value="state.formState.clsIds" mode="tags" placeholder="请选择参加的班级">
+                        <a-select-option value="1">计算机科学与技术1907</a-select-option>
+                        <a-select-option value="2">计算机科学与技术1909</a-select-option>
+                    </a-select>
+                </a-form-item>
+                <a-form-item label="内容" name="content">
+                    <a-textarea v-model:value="state.formState.content" />
+                </a-form-item>
+                <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
+                    <a-button type="primary" @click="formSubmit">提交</a-button>
+                    <a-button style="margin-left: 10px" @click="resetForm">重置</a-button>
+                </a-form-item>
+            </a-form>
+        </a-modal>
+
+    </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, createVNode } from 'vue';
+import { reactive, ref, createVNode,toRaw } from 'vue';
 import { setMessageState } from '@/network/course.js'
 import { useCourseStore } from '@/stores/course'
 import { Modal } from 'ant-design-vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { useUserStore } from '@/stores/user'
+const userStore = useUserStore()
 const courseStore = useCourseStore()
 interface Props {
     data: object
@@ -64,10 +95,15 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const state = reactive({
-    popData: {}
+    popData: {},
+    formState:{
+        theme:'',
+        clsIds:[],
+        content:''
+    }
 })
 
-const visible = ref(false)
+const inforVisible = ref(false)
 const openModal = (obj: any) => {
     const params = {
         id: obj.id
@@ -77,7 +113,7 @@ const openModal = (obj: any) => {
             console.log(res.data);
         })
     state.popData = obj
-    visible.value = true
+    inforVisible.value = true
 }
 const handleCancel = () => {
     visible.value = false;
@@ -98,5 +134,21 @@ function deleteInfo(id: number) {
             console.log('Cancel');
         },
     });
+}
+const visible = ref(false)
+function publishInformation() {
+    visible.value = true
+}
+
+const formRef = ref()
+const formSubmit = () => {
+    formRef.value
+        .validate()
+        .then(() => {
+            console.log('values', state.formState, toRaw(state.formState))
+        })
+}
+const resetForm = () => {
+    formRef.value.resetFields();
 }
 </script>

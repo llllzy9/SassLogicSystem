@@ -52,3 +52,19 @@ export function setMessageState(data) {
         params:data
     })
 }
+
+export function addCourse(data) {
+    return request({
+        url:'/teacher/addCourse',
+        method:'post',
+        data:data
+    })
+}
+
+export function distributeHomework(data) {
+    return request({
+        url:'/teacher/distributeHomework',
+        method:'post',
+        data:data
+    })
+}

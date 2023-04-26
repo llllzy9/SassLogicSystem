@@ -44,3 +44,11 @@ export function getMessage() {
         methdo:'get'
     })
 }
+
+export function setMessageState(data) {
+    return request({
+        url:'/student/setMessageState',
+        method:'get',
+        params:data
+    })
+}

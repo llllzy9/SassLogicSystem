@@ -14,7 +14,7 @@
                 </div>
                 <div class="topic-content"></div>
                 <template #footer>
-                    <a-button type="primary" value="large">进入实验</a-button>
+                    <a-button type="primary" value="large" @click="gotoExam">进入实验</a-button>
                     <a-button value="large">上传提交</a-button>
                 </template>
 
@@ -90,5 +90,9 @@ function openFullModal(obj: any) {
     console.log(obj);
     state.fullPopUps = obj
     fullVisible.value = true
+}
+
+function gotoExam() {
+    window.open('http://106.14.20.78:8080/szljTest','_brank')
 }
 </script>

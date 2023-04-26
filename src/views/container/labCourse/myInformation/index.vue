@@ -5,12 +5,12 @@
 
                 <a-list-item>
                     <template #actions>
-                        <a>删除</a>
+                        <a @click="deleteInfo(item.id)">删除</a>
                         <a @click="openModal(item)">查看</a>
                     </template>
                     <a-list-item-meta :description="item.content">
                         <template #title>
-                            <a-badge dot="true">
+                            <a-badge :dot="courseStore.inforState(item.state)">
                                 <a href="https://www.antdv.com/">{{ item.theme }}</a>
                             </a-badge>
                         </template>
@@ -18,7 +18,10 @@
                             <a-avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
                         </template>
                     </a-list-item-meta>
-                    <div style="color:#aaa">{{ '2023-04-16 14:32' }}</div>
+                    <div style="color:#aaa">
+                        <span style="margin-right: .5rem;">{{ '2023-04-16 14:32' }}</span>
+                        <span v-show="!courseStore.inforState(item.state)">{{ '已读' }}</span>
+                    </div>
                 </a-list-item>
 
             </template>
@@ -28,7 +31,7 @@
     <div class="popUps">
         <a-modal v-model:visible="visible" width="800px" :title="state.popData.theme">
             <template #footer>
-                <a-button key="back" @click="handleCancel" type="primary">已读</a-button>
+                <a-button key="back" @click="handleCancel" type="primary">确认</a-button>
             </template>
             <div style="display: flex;align-items: center;padding-bottom: 10px;">
                 <a-avatar :size="40" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
@@ -45,15 +48,18 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, createVNode } from 'vue';
+import { setMessageState } from '@/network/course.js'
+import { useCourseStore } from '@/stores/course'
+import { Modal } from 'ant-design-vue';
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+const courseStore = useCourseStore()
 interface Props {
     data: object
 }
 const props = withDefaults(defineProps<Props>(), {
     data: () => {
-        return {
-
-        }
+        return {}
     }
 })
 
@@ -63,6 +69,13 @@ const state = reactive({
 
 const visible = ref(false)
 const openModal = (obj: any) => {
+    const params = {
+        id: obj.id
+    }
+    setMessageState(params)
+        .then((res: any) => {
+            console.log(res.data);
+        })
     state.popData = obj
     visible.value = true
 }
@@ -70,4 +83,20 @@ const handleCancel = () => {
     visible.value = false;
     console.log('guanbi');
 };
+
+function deleteInfo(id: number) {
+    Modal.confirm({
+        title: () => '你确定要删除这个信息吗?',
+        icon: () => createVNode(ExclamationCircleOutlined),
+        okText: () => '是的',
+        okType: 'danger',
+        cancelText: () => '取消',
+        onOk() {
+            courseStore.deleteInfor(id)
+        },
+        onCancel() {
+            console.log('Cancel');
+        },
+    });
+}
 </script>

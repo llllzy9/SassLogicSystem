@@ -15,7 +15,7 @@
         </a-menu-item>
 
         <a-menu-item key="pass" @click="routeGoto('myInformation')">
-          <a-badge count="2">
+          <a-badge :count="courseStore.inforNum()">
             我的信息
           </a-badge>
         </a-menu-item>
@@ -45,8 +45,10 @@
 import Avatar from './Avatar/index.vue'
 import { useRoute, useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user'
+import { useCourseStore } from '@/stores/course';
 import { DownOutlined } from '@ant-design/icons-vue';
 const userStore = useUserStore()
+const courseStore= useCourseStore()
 const route = useRoute()
 const router = useRouter()
 

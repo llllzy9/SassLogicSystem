@@ -2,11 +2,11 @@
     <div v-for="(card,index) in dataList" :key="index" class="list-container">
         <a-card hoverable style="width: 300px">
             <template #cover>
-                <img alt="example" :src="userStore.courseImg(card.avatar)">
+                <img alt="example" :src="courseStore.courseImg(card.avatar)">
             </template>
             <template class="ant-card-actions" #actions>
                 <span @click="openModal(card,index,'exam')">进入实验</span>
-                <a-badge dot="true">
+                <a-badge :dot="courseStore.inforNum()>0">
                 <a @click="openModal(card,index,'detail')">查看详情</a>
                 </a-badge>
             </template>
@@ -23,8 +23,8 @@
 </template>
 
 <script lang="ts" setup>
-import {useUserStore} from '@/stores/user.ts'
-const userStore = useUserStore()
+import {useCourseStore} from '@/stores/course.ts'
+const courseStore = useCourseStore()
 
 interface Info{
     avatar:string

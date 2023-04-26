@@ -27,11 +27,14 @@
 import { CodeSandboxCircleFilled } from '@ant-design/icons-vue'
 import { getUserInfo } from '@/network/user.js'
 import { useUserStore } from '@/stores/user'
+import { useCourseStore } from '@/stores/course'
+import { getMessage } from '@/network/course.js'
 import SideMenu from '@/components/SideMenu/index.vue'
 import Head from '@/components/Header/index.vue'
 import myBreadcrumb from '@/components/breadcrumb/index.vue'
 import { ref, onMounted } from 'vue';
 
+const courseStore = useCourseStore()
 const userStore = useUserStore()
 getUserInfo()
     .then((res: any) => {
@@ -40,7 +43,12 @@ getUserInfo()
         }
     })
     .catch((err: any) => console.log(err))
-
+    getMessage()
+        .then((res:any) => {
+            if(res.data.code === 200){
+                courseStore.informationList = res.data.data
+            }
+        })
 const collapsed = ref<boolean>(false)
 </script>
 

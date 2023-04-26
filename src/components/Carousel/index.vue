@@ -1,10 +1,18 @@
 <template>
     <a-carousel :after-change="onChange">
-    <div><h3>1</h3></div>
-    <div><h3>2</h3></div>
-    <div><h3>3</h3></div>
-    <div><h3>4</h3></div>
-  </a-carousel>
+      <a-carousel-slide>
+        <img src="your-image-url-1" alt="image-description-1" />
+      </a-carousel-slide>
+      <a-carousel-slide>
+        <img src="your-image-url-2" alt="image-description-2" />
+      </a-carousel-slide>
+      <a-carousel-slide>
+        <img src="your-image-url-3" alt="image-description-3" />
+      </a-carousel-slide>
+      <a-carousel-slide>
+        <img src="your-image-url-4" alt="image-description-4" />
+      </a-carousel-slide>
+    </a-carousel>
 </template>
 
 <script lang="ts" setup>
@@ -18,8 +26,9 @@ const onChange = (current: number) => {
 
 .ant-carousel  {
   text-align: center;
-  height: 160px;
-  line-height: 160px;
+  height: 300px;
+  width:80%;
+  line-height: 300px;
   background: #364d79;
   overflow: hidden;
 }

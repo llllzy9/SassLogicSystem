@@ -25,7 +25,7 @@
 
 <script lang="ts" setup>
 import { CodeSandboxCircleFilled } from '@ant-design/icons-vue'
-import { getUserInfo } from "@/network/user.js"
+import { getUserInfo } from '@/network/user.js'
 import { useUserStore } from '@/stores/user'
 import SideMenu from '@/components/SideMenu/index.vue'
 import Head from '@/components/Header/index.vue'

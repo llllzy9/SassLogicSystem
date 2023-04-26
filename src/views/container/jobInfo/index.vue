@@ -6,10 +6,9 @@
                 <template #renderItem="{ item }">
                     <a-list-item>
                         <template #actions>
-                            <a>编辑</a>
-                            <a>查看</a>
+                            <a @click="handleView(item)">查看</a>
                         </template>
-                        <a-list-item-meta description="虚拟仿真实验虚拟仿真实验虚拟仿真实验虚拟仿真实验">
+                        <a-list-item-meta :description="item.description">
                             <template #title>
                                 <a href="https://www.antdv.com/">{{ item.title }}</a>
                             </template>
@@ -26,10 +25,9 @@
                 <template #renderItem="{ item }">
                     <a-list-item>
                         <template #actions>
-                            <a>编辑</a>
-                            <a>查看</a>
+                            <a @click="handleView(item)">查看</a>
                         </template>
-                        <a-list-item-meta description="虚拟仿真实验虚拟仿真实验虚拟仿真实验虚拟仿真实验">
+                        <a-list-item-meta :description="item.description">
                             <template #title>
                                 <a href="https://www.antdv.com/">{{ item.title }}</a>
                             </template>
@@ -45,10 +43,9 @@
                 <template #renderItem="{ item }">
                     <a-list-item>
                         <template #actions>
-                            <a>编辑</a>
                             <a>查看</a>
                         </template>
-                        <a-list-item-meta description="虚拟仿真实验虚拟仿真实验虚拟仿真实验虚拟仿真实验">
+                        <a-list-item-meta :description="item.description">
                             <template #title>
                                 <a href="https://www.antdv.com/">{{ item.title }}</a>
                             </template>
@@ -96,23 +93,47 @@ const tabListNoTitle = [
 
 interface DataItem {
     title: string;
-}
+    description:string;
+};
 const data: DataItem[] = [
     {
         title: '数字逻辑1',
+        description: '虚拟仿真实验第一章作业  2023-3-25 至 2023-4-30',
     },
     {
         title: '数字逻辑2',
+        description: '虚拟仿真实验第二章作业',
     },
     {
         title: '数字逻辑3',
+        description: '虚拟仿真实验第三章作业',
     },
     {
         title: '数字逻辑4',
+        description: '虚拟仿真实验第四章作业',
     },
 ];
-const key = ref('tab1');
-const noTitleKey = ref('app');
+
+const data1:DataItem[] = [
+    {
+        title: '数字逻辑4',
+        description: '虚拟仿真实验第一章作业',
+    },
+    {
+        title: '数字逻辑2',
+        description: '虚拟仿真实验第二章作业',
+    },
+    {
+        title: '数字逻辑3',
+        description: '虚拟仿真实验第三章作业',
+    },
+    {
+        title: '数字逻辑4',
+        description: '虚拟仿真实验第四章作业',
+    },
+]
+const key = ref('tab1'); 
+const noTitleKey = ref('article');
 
 const onTabChange = (value: string, type: string) => {
     console.log(value, type);
@@ -122,6 +143,11 @@ const onTabChange = (value: string, type: string) => {
         noTitleKey.value = value;
     }
 };
+
+const handleView = (item) => {
+    console.log('viewing', item)
+    // do something when "View" link is clicked
+}
 </script>
 
 <style lang="scss" scoped></style>

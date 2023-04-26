@@ -46,16 +46,14 @@
 
 <script lang="ts" setup>
 import { UserOutlined, LockOutlined, EditOutlined, LoadingOutlined } from '@ant-design/icons-vue';
-import { reactive, ref, h } from 'vue';
+import { reactive, ref, h, provide } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user'
 import { message } from 'ant-design-vue';
 import { loginRequest, registerRequest } from '../../network/login.js'
-import { getUserInfo } from '@/network/user.js'
 
 const router = useRouter()
 const userStore = useUserStore()
-
 const formRef = ref()
 //表单验证规则
 const rules = {
@@ -108,9 +106,9 @@ function onSubmit() {
                         if (res.data.code === 200) {
                             message.success(res.data.msg)
                             sessionStorage.setItem('token', res.data.data.token)
-                            userStore.token = res.data.data.token
-                            userStore.role = res.data.data.role
+                            sessionStorage.setItem('roles',res.data.data.role)
                             spinning.value = false
+                            userStore.rolesState()                                                      
                             //获取用户信息
                             router.push({ path: '/container' })
                         } else {

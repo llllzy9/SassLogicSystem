@@ -2,40 +2,54 @@ import { ref, reactive, toRefs } from "vue";
 import { defineStore } from "pinia";
 
 interface Info {
-    id:number
-    role:number
-    token:string
-    nickname:string
-    avatar:string
-    clsName:string
-    email:string
-    phoneNumber:number
-    school:string
-    sex:string
-    username:string
+    id: number
+    nickname: string
+    avatar: string
+    clsName: string
+    email: string
+    phoneNumber: number
+    school: string
+    sex: string
+    username: string,
+    roles:string,
 }
 
 export const useUserStore = defineStore('user', () => {
     const userInfo = reactive<Info>({
-        id:0,
-        role:0,
-        token:'',
-        nickname:'',
-        avatar:'',
-        clsName:'',
-        email:'',
-        phoneNumber:0,
-        school:'',
-        sex:'',
-        username:''
+        id: 0,
+        nickname: '',
+        avatar: '',
+        clsName: '',
+        email: '',
+        phoneNumber: 0,
+        school: '',
+        sex: '',
+        username: '',
+        roles:'',
     })
+    const isTeacher = ref<boolean | undefined>(undefined)
 
-    const avatarImg = (avatar?:string):string => `http://154.204.60.38:8000/img/user/${userInfo.username}/${avatar || userInfo.avatar}` 
-    const courseImg = (avatar?:string):string => `http://154.204.60.38:8000/img/user/course/${avatar}`  
+    const avatarImg = (avatar?: string) => `http://154.204.60.38:8000/img/user/${userInfo.username}/${avatar || userInfo.avatar}`
+
+    const rolesState = () => {
+        const role = sessionStorage.getItem('roles')
+        if (role === '2') {
+            userInfo.roles = 'teacher'
+            isTeacher.value = true
+        } else if (role === '3') {
+            userInfo.roles = 'student'
+            isTeacher.value = false
+        } else {
+            userInfo.roles = 'admin'
+        }
+    }
+
 
     return {
         userInfo,
         avatarImg,
-        courseImg
+        rolesState,
+        isTeacher
+
     }
 })

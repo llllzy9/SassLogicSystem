@@ -1,47 +1,65 @@
 <template>
+    <div class="my-form">
+    <a-form
+    ref="formRef"
+    :rules="formRules"
+    >
+        <a-row wrap="true">
+            <template v-for="item in formItem" :key="item.label">
+                <a-col>
+                    <a-form-item :label="item.label" :name="item.name">
+                        <template v-if="item.type === 'input' || item.type === 'password'">
+                            <a-input :placeholder="item.placeholder" v-model:value="formData[`${item.field}`]">
+                            </a-input>
+                        </template>
+                        <template v-eles-if="item.type === 'select'">
 
-    <a-form layout="inline">
-        <a-col :span="4">
-        <a-form-item label="科目">
-            <a-input>
-            </a-input>
-        </a-form-item>
-    </a-col>
-    <a-col :span="4">
-        <a-form-item label="教师名">
-            <a-input>
-            </a-input>
-        </a-form-item>
-    </a-col>
-    <a-col :span="4">
-        <a-form-item label="开课时间">
-            <a-range-picker />
-        </a-form-item>
-    </a-col>
-    <a-col :span="4">
-        <a-form-item label="班级">
-            <a-input>
-            </a-input>
-        </a-form-item>
-    </a-col>
-    <a-col :span="8">
-        <a-form-item>
-            <a-button type="primary" html-type="submit">
-                搜索
-            </a-button>
-        </a-form-item>
-        <a-form-item>
-            <a-button type="" html-type="submit">
-                重置
-            </a-button>
-        </a-form-item>
-    </a-col>
-       
+                            <a-select :placeholder="item.placeholder" v-model:value="formData[`${item.field}`]">
+                                <a-option v-for="option in item.options" :key="option.value" :value="option.value">{{
+                                    option.title }}</a-option>
+                            </a-select>
+                        </template>
+                        <template v-eles-if="item.type === 'datepicker'">
+                            <a-range-picker v-model="formData[`${item.field}`]">
+                            </a-range-picker>
+                        </template>
+                        <template v-eles-if="item.type === 'upload'">
+                            <a-upload
+                            v-model:file-list="formData[`${item.field}`]"
+                            >
+
+                            </a-upload>
+                        </template>
+                    </a-form-item>
+                </a-col>
+            </template>
+        </a-row>
     </a-form>
+    <div class="footer">
+        <slot name="footer"></slot>
+    </div>
+</div>
 </template>
 
 <script lang="ts" setup>
-import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
-// import { ValidateErrorEntity } from 'ant-design-vue/es/form/interface';
 import { reactive } from 'vue';
+
+type IForrmType = 'input' | 'password' | 'select' | 'datepicker' | 'upload'
+
+interface IFormItem {
+    field: string
+    type: IForrmType
+    label: string
+    placeholder?: any
+    options?: any[]
+    name?:string
+    otherOptions?:any
+}
+
+interface Props {
+    formData: Record<string, any>
+    formItem: Array
+    formRules:object
+}
+const props = withDefaults(defineProps<Props>(), {})
 </script>

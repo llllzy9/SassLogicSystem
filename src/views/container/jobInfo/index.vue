@@ -34,7 +34,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive } from 'vue';
-import { getHomework } from '@/network/course.js'
+import { getHomework } from '@/network/course.js';
 import { message } from 'ant-design-vue';
 import myTable from '@/components/Table/index.vue'
 

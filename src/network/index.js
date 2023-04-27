@@ -12,6 +12,7 @@ export function request(config){
 
     instance.interceptors.request.use(config => {
         NProgress.start()
+        if(config.url === '/user/login' || config.url === '/user/register') return config
         if(userStore.isTeacher == undefined | null){
             console.log('重置角色权限');
             userStore.rolesState()

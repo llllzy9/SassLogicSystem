@@ -66,8 +66,8 @@ const rules = {
     },
     password: {
         required: true,
-        min: 5,
-        message: '密码长度最低为5位',
+        min: 3,
+        message: '密码长度最低为3位',
         trigger: 'blur'
     }
 };

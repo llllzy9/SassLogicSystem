@@ -10,7 +10,7 @@
             <myTable :columns="columns" :data-source="state.noneHomeWork" :openFullModal="openFullModal" />
         </a-tab-pane>
     </a-tabs>
-    <div class="full-popUps">
+    <div class="full-popUps-student">
         <a-modal v-model:visible="fullVisible" :title="state.fullPopUps.title" width="100%" wrapClassName="full-modal">
             <div class="top-info" :style="{ ...fullPopStyle }">
                 <a-row>
@@ -27,6 +27,20 @@
                 <a-button type="primary" value="large" @click="gotoExam">进入实验</a-button>
                 <a-button value="large">上传提交</a-button>
             </template>
+        </a-modal>
+    </div>
+    <div class="full-popUps-teacher">
+        <a-modal v-model:visible="correctFullVisible" :title="state.fullPopUps.title" width="100%" wrapClassName="full-modal">
+            <div class="top-info" :style="{ ...fullPopStyle }">
+                <a-row>
+                    <a-col :span="2"><span>满分：{{ state.fullPopUps.score }}</span></a-col>
+                </a-row>
+                <a-row>
+                    <a-col :span="24">
+                        <p>作答时间：{{ state.fullPopUps.startTime }} ~ {{ state.fullPopUps.endTime }}</p>
+                    </a-col>
+                </a-row>
+            </div>
         </a-modal>
     </div>
 </template>
@@ -84,7 +98,7 @@ const fullPopStyle = {
     fontSize: '18px'
 }
 const state = reactive({
-    allHomeWork: [],
+    allHomeWork: [{}],
     doneHomeWork: [],
     noneHomeWork: [],
     fullPopUps: {
@@ -109,7 +123,7 @@ function getData() {
                         reslove(res.data.data)
                     } else reject(res.data.msg)
                 })
-        } else {
+        } else if(userStore.isTeacher === false){
             console.log('获取学生数据')
             getHomework()
                 .then((res: any) => {
@@ -117,6 +131,8 @@ function getData() {
                         reslove(res.data.data)
                     } else reject(res.data.msg)
                 })
+        } else{
+            message.error('没有数据')
         }
     })
 }
@@ -129,25 +145,16 @@ getData()
         loading.value = false
     })
     .catch((err: any) => {
-        message.error(err)
+        message.error('没有数据')
     })
-// getHomework()
-//     .then((res: any) => {
-//         console.log(res.data);
-//         if (res.data.code === 200) {
-//             message.success('获取成功')
-//             state.allHomeWork = res.data.data
-//             dataClassification(res.data.data)
-//             loading.value = false
-//         }
-//     })
-const activeKey = ref('1')
 
+const activeKey = ref('1')
+const correctFullVisible = ref<boolean>(false)
 const fullVisible = ref<boolean>(false)
 function openFullModal(obj: any) {
     if (userStore.isTeacher) {
         console.log(obj)
-
+        correctFullVisible.value =  true
         // fullVisible.value = true
     } else {
         state.fullPopUps = obj

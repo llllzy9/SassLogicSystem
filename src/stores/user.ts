@@ -28,6 +28,7 @@ export const useUserStore = defineStore('user', () => {
         roles:'',
     })
     const isTeacher = ref<boolean | undefined>(undefined)
+    const isStudent = ref<boolean | undefined>(undefined)
 
     const avatarImg = (avatar?: string) => `http://154.204.60.38:8000/img/user/${userInfo.username}/${avatar || userInfo.avatar}`
 
@@ -36,9 +37,11 @@ export const useUserStore = defineStore('user', () => {
         if (role === '2') {
             userInfo.roles = 'teacher'
             isTeacher.value = true
+            isStudent.value = false
         } else if (role === '3') {
             userInfo.roles = 'student'
             isTeacher.value = false
+            isStudent.value = true
         } else {
             userInfo.roles = 'admin'
         }
@@ -49,6 +52,7 @@ export const useUserStore = defineStore('user', () => {
         userInfo,
         avatarImg,
         rolesState,
-        isTeacher
+        isTeacher,
+        isStudent
     }
 })

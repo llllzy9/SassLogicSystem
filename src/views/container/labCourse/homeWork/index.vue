@@ -49,6 +49,7 @@
                 <a-form-item label="班级" name="clsIds">
                     <a-select v-model:value="state.formState.clsIds" mode="tags" placeholder="请选择参加的班级">
                         <a-select-option value="1">计算机科学与技术1907</a-select-option>
+                        <a-select-option value="2">计算机科学与技术1908</a-select-option>
                         <a-select-option value="2">计算机科学与技术1909</a-select-option>
                     </a-select>
                 </a-form-item>

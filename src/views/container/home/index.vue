@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" v-if="userStore.isStudent">
         <myCarousel ></myCarousel>
         <div class="cardbox">
             <a-card title="作业（待完成）" :bordered="true" style="width: 500px">
@@ -46,29 +46,97 @@
             </a-card>
         </div>
     </div>
+    <div class="container" v-if="userStore.isTeacher">
+        <myCarousel ></myCarousel>
+        <div class="cardbox">
+            <a-card title="作业完成情况" :bordered="true" style="width: 500px">
+                <a-list item-layout="horizontal" :data-source="data.homeworkStatus">
+                  <template #renderItem="{ item }">
+                    <a-list-item>
+                      
+                      <template #extra>
+                          <p>{{ item.finishedNum }} / {{ item.allNum }}</p>
+                        </template>
+                      <a-list-item-meta
+                        :description="item.taskName"
+                      >
+                        <template #title>
+                          <a href="https://www.antdv.com/">{{ item.course }}</a>
+                        </template>
+                        <template #avatar>
+                          <a-avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+                        </template>
+                      </a-list-item-meta>
+                    </a-list-item>
+                  </template>
+                </a-list>
+            </a-card>
+            <a-card title="备忘录" :bordered="true" style="width: 500px">
+              <template #extra><a href="#">添加</a></template>
+                <a-list item-layout="horizontal" :data-source="data.note">
+                  <template #renderItem="{ item }">
+                    <a-list-item>
+                        <template #actions>
+                          <a type="primary" @click="handleView(item)">编辑</a>
+                          <a type="primary" @click="handleView(item)">删除</a>
+                        </template>
+                      <a-list-item-meta :description="item.content">
+                        <template #title>
+                          <a href="https://www.antdv.com/">{{ item.theme }}</a>
+                        </template>
+                        <template #avatar>
+                          <a-avatar :src="item.img" />
+                        </template>
+                      </a-list-item-meta>
+                      {{ item.content }}
+                    </a-list-item>
+                  </template>
+                </a-list>
+            </a-card>
+        </div>
+    </div>
 </template>
 
 <script lang="ts" setup>
 import myCarousel from "@/components/Carousel/index.vue"
 import { getHomework, getMessage } from '@/network/home.js'
 import { ref, reactive, inject } from 'vue';
+import { useUserStore } from '@/stores/user';
 
+const userStore = useUserStore()
 const data =reactive({
-        messageArr : [{
-            id :'',
-            theme: '',
-            content :'',
-            publishTime : '',
-            state :''
-        }],
-        homeWorkList:[{
-            id :'',
-            title: '',
-            content :'',
-            startTime : '',
-            endTime :'',
-            completionStatus : ''
-        }]
+  //学生
+  messageArr : [{
+      id :'',
+      img: '', //用户头像
+      theme: '',
+      content :'',
+      publishTime : '',
+      state :''
+  }],
+  homeWorkList:[{
+      id :'',
+      img: '', //用户头像
+      title: '',
+      content :'',
+      startTime : '',
+      endTime :'',
+      completionStatus : ''
+  }],
+  // 老师
+  homeworkStatus:[{ //作业完成情况
+    id:'',
+    img: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png', //老师头像
+    course: '1111', //课程名
+    taskName: '33333333', //实验名
+    finishedNum: '23', //完成作业人数
+    allNum:'99', //要完成该作业的总人数
+  }],
+  note:[{ //备忘录 可编辑可删除可添加
+    id:'',
+    img: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png', //用户头像
+    content:'444444444444444444444444444444444444444444444444444444444444444444444', //内容 0
+  }]
 })
 
 getHomework()

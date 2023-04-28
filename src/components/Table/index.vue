@@ -1,8 +1,41 @@
 <template>
-  <a-table :columns="columns" :data-source="dataSource">
-    <template #tags="{ record }">
+  <a-table :itemColumns="columns" :data-source="dataSource">
+    <template v-for="item in columns" :key="item.dataIndex">
+      <a-table-column :title="item.title" :data-index="item.dataIndex" :align="item.align">
+        <template v-if="item.tags" #default="{ record }">
+          <span>
+            <a-tag :color="record.completionStatus ? 'green' : 'warning'">
+              {{ record.completionStatus ? '完成' : '未完成' }}
+            </a-tag>
+            <a-tag :color="(formatter(record)) ? 'red' : 'processing'">
+              {{ (formatter(record)) ? '已截至' : '未截至' }}
+            </a-tag>
+          </span>
+        </template>
+
+        <template v-if="item.text" #default="{ text }">
+          <a>{{ text }}</a>
+        </template>
+
+        <template v-if="item.time" #default="{ record }">
+          <span>{{ record.startTime }} ~ {{ record.endTime }}</span>
+        </template>
+
+        <template v-if="item.btns" #default="{ record }">
+          
+          <span v-for="btn in item.btns" :key="btn.label">
+
+            <a-button @click="btn.func(record)" :type="btn.type">{{ btn.label }}</a-button>
+            <a-divider type="vertical" />
+          </span>
+        </template>
+
+      </a-table-column>
+    </template>
+
+    <!-- <template #tags="{ record }">
       <span>
-        <a-tag :color="record.completionStatus ? 'green' : 'warning'" v-if="!userStore.isTeacher">
+        <a-tag :color="record.completionStatus ? 'green' : 'warning'">
           {{ record.completionStatus ? '完成' : '未完成' }}
         </a-tag>
         <a-tag :color="(formatter(record)) ? 'red' : 'processing'">
@@ -17,15 +50,10 @@
       <span>{{ record.startTime }} ~ {{ record.endTime }}</span>
     </template>
     <template #operation="{ record }">
-      <a-row>
-      <a-col :span="5">
-        <a-button type="primary" @click="openFullModal(record)">{{userStore.isTeacher? '批改' : '开始'}}</a-button>
-      </a-col>
-      <a-col :span="6" v-if="userStore.isTeacher" :offset="2">
-        <a-button type="danger" @click="handleDelete(record)">删除</a-button>
-      </a-col>
-    </a-row>
-    </template>
+      <a-button type="primary" @click="openFullModal(record)" v-if="!userStore.isTeacher">开始</a-button>
+      <a-button v-if="userStore.isTeacher" @click="handleView(record)">查看</a-button>
+      <a-button type="danger" @click="handleDelete(record)" v-if="userStore.isTeacher">删除</a-button>
+    </template> -->
   </a-table>
 </template>
 
@@ -33,8 +61,9 @@
 import { useUserStore } from '@/stores/user'
 const userStore = useUserStore()
 interface Props {
-  dataSource: Array<any>,
-  columns: Array<any>,
+  dataSource: Array<any>
+  columns: Array<any>
+  handleView: (obj: any) => void
   openFullModal: (obj: any) => void
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -101,6 +130,7 @@ function formatter(record: any) {
 
 function handleDelete(record) {
   console.log(record);
-  
+
 }
 </script>
+<style lang="scss"></style>

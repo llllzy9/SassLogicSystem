@@ -3,7 +3,8 @@
         <a-button type="primary" @click="assignHomework">布置作业</a-button>
     </div>
     <myTable :loading="data.loading" :dataSource="data.homeWorkList" :columns="state.columns" :openFullModal="openFullModal"
-        ></myTable>
+        >
+    </myTable>
     <div class="full-popUps">
         <a-modal v-model:visible="fullVisible" :title="state.fullPopUps.title" width="100%" wrapClassName="full-modal">
             <div class="top-info" :style="{ ...fullPopStyle }">

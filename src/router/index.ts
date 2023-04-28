@@ -97,6 +97,14 @@ const router = createRouter({
             title: '作业信息'
           },
           component: () => import('../views/container/jobInfo/index.vue')
+        },
+        {
+          path: 'correcting',
+          name: 'correcting',
+          meta: {
+            title: '作业批改'
+          },
+          component: () => import('../views/container/jobInfo/teacherView/correcting/index.vue')
         }
       ]
     },

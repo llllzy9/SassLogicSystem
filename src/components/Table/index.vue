@@ -4,10 +4,10 @@
       <a-table-column :title="item.title" :data-index="item.dataIndex" :align="item.align">
         <template v-if="item.tags" #default="{ record }">
           <span>
-            <a-tag :color="record.completionStatus ? 'green' : 'warning'">
+            <a-tag :color="record.completionStatus ? 'green' : 'warning'" v-if="item.tags.done || true">
               {{ record.completionStatus ? '完成' : '未完成' }}
             </a-tag>
-            <a-tag :color="(formatter(record)) ? 'red' : 'processing'">
+            <a-tag :color="(formatter(record)) ? 'red' : 'processing'" v-if="item.tags.deadline || true">
               {{ (formatter(record)) ? '已截至' : '未截至' }}
             </a-tag>
           </span>
@@ -25,7 +25,7 @@
           
           <span v-for="btn in item.btns" :key="btn.label">
 
-            <a-button @click="btn.func(record)" :type="btn.type">{{ btn.label }}</a-button>
+            <a-button @click="btn.func(record)" :type="btn.type" v-if="btn.display">{{ btn.label }}</a-button>
             <a-divider type="vertical" />
           </span>
         </template>

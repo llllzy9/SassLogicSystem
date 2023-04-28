@@ -1,17 +1,18 @@
 <template>
+     <a-form-item label="班级">
      <a-select
       ref="select"
-      v-model:value="selctValue"
+      v-model:value="selectValue"
       style="width: 120px"
       @change="handleChange"
     >
       <a-select-option value="1">计科1907</a-select-option>
       <a-select-option value="2">计科2002</a-select-option>
     </a-select>
+</a-form-item>
     <a-tabs v-model:activeKey="activeKey">
         <a-tab-pane key="1" tab="全部">
-            <myTable :columns="columns" :data-source="state.allHomeWork" >
-            </myTable>
+            <myTable :columns="columns" :data-source="state.allHomeWork" />
         </a-tab-pane>
         <a-tab-pane key="2" tab="已批改" force-render>
             <myTable :columns="columns" :data-source="state.doneHomeWork" />
@@ -32,7 +33,7 @@ import { useUserStore } from '@/stores/user'
 const userStore = useUserStore()
 const router = useRouter()
 const activeKey = ref('1')
-const selectValue = ref()
+const selectValue = ref('计科1907')
 const columns = [
     {
         title: '课程',

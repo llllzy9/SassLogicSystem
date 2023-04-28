@@ -2,8 +2,7 @@
     <div class="btn-wrap" v-if="userStore.isTeacher">
         <a-button type="primary" @click="assignHomework">布置作业</a-button>
     </div>
-    <myTable :loading="data.loading" :dataSource="data.homeWorkList" :columns="state.columns" :openFullModal="openFullModal"
-        >
+    <myTable :loading="data.loading" :dataSource="data.homeWorkList" :columns="state.columns">
     </myTable>
     <div class="full-popUps">
         <a-modal v-model:visible="fullVisible" :title="state.fullPopUps.title" width="100%" wrapClassName="full-modal">
@@ -40,8 +39,7 @@
                 <a-form-item label="时间" name="startTime">
                     <a-space direction="vertical">
                         <a-date-picker v-model:value="state.formState.startTime" :disabled-date="disabledStartDate"
-                            show-time format="YYYY-MM-DD HH:mm:ss" placeholder="开始时间"
-                            @openChange="handleStartOpenChange" />
+                            show-time format="YYYY-MM-DD HH:mm:ss" placeholder="开始时间" @openChange="handleStartOpenChange" />
                         <a-date-picker v-model:value="state.formState.endTime" :disabled-date="disabledEndDate" show-time
                             format="YYYY-MM-DD HH:mm:ss" placeholder="截至时间" :open="endOpen"
                             @openChange="handleEndOpenChange" />
@@ -87,23 +85,28 @@ const props = withDefaults(defineProps<Props>(), {
 const state = reactive({
     columns: [
         {
+            title: '课程',
+            dataIndex: 'course',
+        },
+        {
             title: '名称',
             dataIndex: 'title',
         },
         {
             title: '分数',
-            dataIndex: 'score'
+            dataIndex: 'score',
+            text: true
         },
         {
             title: '完成时间',
             dataIndex: 'startTime',
-            align:'center',
-            slots: { customRender: 'text' }
+            time: true,
+            align:'center'
         },
         {
             title: '状态',
             dataIndex: 'completionStatus',
-            slots: { customRender: 'tags' }
+            tags: true,
         },
         {
             title: '内容描述',
@@ -112,8 +115,28 @@ const state = reactive({
         {
             title: '操作',
             dataIndex: 'operation',
-            slots: { customRender: 'operation' },
-        },
+            btns: [
+                {
+                    label: '开始',
+                    func: (obj: any) => openFullModal(obj),
+                    type: 'primary',
+                    display:!userStore.isTeacher
+                },
+                {
+                    label: '编辑',
+                    func: (obj: any) => openFullModal(obj),
+                    type: 'primary',
+                    display:userStore.isTeacher
+                },
+                {
+                    label: '删除',
+                    func: (obj: any) => handleView(obj),
+                    type: 'danger',
+                    display:userStore.isTeacher
+                }
+            ]
+
+        }
     ],
     fullPopUps: {
         title: '',
@@ -194,7 +217,7 @@ const formSubmit = () => {
         .then(() => {
             console.log('values', state.formState, toRaw(state.formState))
             distributeHomework(toRaw(state.formState))
-                .then((res:any) => {
+                .then((res: any) => {
                     console.log(res.data)
                 })
         })

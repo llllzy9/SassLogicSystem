@@ -74,6 +74,7 @@ const skeletonLoading = ref<boolean>(false)
 skeletonLoading.value = true
 console.log(userStore.isTeacher);
 
+//获取学生课程
 getStudentCourse().then((res: any) => {
     if (res.data.code === 200) {
         state.dataList = res.data.data
@@ -82,6 +83,8 @@ getStudentCourse().then((res: any) => {
         return Promise.reject(res.data.msg)
     }
 }).catch((err: any) => console.log(err))
+
+//获取老师课程
 
 const state = reactive({
     //课程数据

@@ -2,7 +2,7 @@
     <div v-for="(card,index) in dataList" :key="index" class="list-container">
         <a-card hoverable style="width: 300px">
             <template #cover>
-                <img alt="example" :src="courseStore.courseImg(card.avatar)">
+                <img alt="example" style="object-fit:cover;height: 250px;" :src="courseStore.courseImg(card.avatar)">
             </template>
             <template class="ant-card-actions" #actions>
                 <span @click="openModal('exam',card,index,)">进入实验</span>

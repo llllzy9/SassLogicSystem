@@ -1,22 +1,25 @@
 <template>
+    <a-form-item label="课程">
      <a-select
       ref="select"
       v-model:value="selectValue"
       style="width: 120px"
       @change="handleSelChange"
     >
+      <a-select-option value="全部">全部</a-select-option>
       <a-select-option value="数字逻辑">数字逻辑</a-select-option>
       <a-select-option value="计算机网络" disabled>计算机网络</a-select-option>
     </a-select>
+</a-form-item>
    <a-tabs v-model:activeKey="activeKey">
         <a-tab-pane key="1" tab="全部">
-            <myTable :columns="columns" :data-source="state.allHomeWork" :handle-view="handleView" />
+            <myTable :columns="columns" :data-source="state.allHomeWork" />
         </a-tab-pane>
-        <a-tab-pane key="2" tab="已截至" force-render>
-            <myTable :columns="columns" :data-source="state.doneHomeWork" :handle-view="handleView" />
+        <a-tab-pane key="2" tab="已过期" force-render>
+            <myTable :columns="columns" :data-source="state.doneHomeWork" />
         </a-tab-pane>
-        <a-tab-pane key="3" tab="未截至">
-            <myTable :columns="columns" :data-source="state.noneHomeWork" :handle-view="handleView" />
+        <a-tab-pane key="3" tab="未过期">
+            <myTable :columns="columns" :data-source="state.noneHomeWork" />
         </a-tab-pane>
     </a-tabs>
 </template>
@@ -30,20 +33,11 @@ import { useUserStore } from '@/stores/user'
 const userStore = useUserStore()
 const router = useRouter()
 const activeKey = ref('1')
-const selectValue = ref()
+const selectValue = ref('全部')
 const columns = [
     {
         title: '课程',
         dataIndex: 'course',
-    },
-    {
-        title: '名称',
-        dataIndex: 'title',
-    },
-    {
-        title: '分数',
-        dataIndex: 'score',
-        text:true
     },
     {
         title: '完成时间',
@@ -53,7 +47,10 @@ const columns = [
     {
         title: '状态',
         dataIndex: 'completionStatus',
-        tags:true
+        tags:{
+            done:false,
+            deadline:true
+        }
     },
     {
         title: '内容描述',
@@ -65,7 +62,9 @@ const columns = [
         btns:[
             {
                 label:'查看',
-                func:(obj:any) => handleView(obj)
+                func:(obj:any) => handleView(obj),
+                display:userStore.isTeacher,
+                type:'primary'
             }
         ]
         

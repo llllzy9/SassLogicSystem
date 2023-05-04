@@ -15,9 +15,9 @@
         </a-menu-item>
 
         <a-menu-item key="pass" @click="routeGoto('myInformation')">
-          <a-badge :count="courseStore.inforNum()">
+          <!-- <a-badge :count="courseStore.inforNum()"> -->
             我的信息
-          </a-badge>
+          <!-- </a-badge> -->
         </a-menu-item>
 
       </a-menu>

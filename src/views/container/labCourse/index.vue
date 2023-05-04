@@ -5,24 +5,36 @@
                 {{ userStore.isTeacher ? '我教的课：' : '我学的课：' }}
             </div>
             <div class="addBtn" v-if="userStore.isTeacher">
-                <a-button type="primary" shape="round" @click="openModal('addCourse')">添加课程</a-button>
+                <a-button type="primary" shape="round" @click="addCourseModal">添加课程</a-button>
             </div>
         </div>
         <div class="content">
             <a-skeleton active :loading="skeletonLoading" />
-            <CardList :dataList="state.dataList" :openModal="openModal" />
+            <CardList :dataList="state.dataList" v-if="state.dataList" />
+            <a-empty description="您暂时还没有教的课程哦" v-else />
         </div>
+
+
         <div class="modal">
             <a-modal v-model:visible="visible" width="600px" title="添加课程">
                 <template #footer>
                 </template>
                 <a-form ref="formRef" :model="state.formState" :rules="rules" :label-col="{ span: 4 }"
                     :wrapper-col="{ span: 14 }">
-                    <a-form-item ref="name" label="课程名" name="course">
-                        <a-input v-model:value="state.formState.course" placeholder="请输入课程名" />
+                    <a-form-item ref="name" label="课程名" name="courseName">
+                        <a-input v-model:value="state.formState.courseName" placeholder="请输入课程名" />
                     </a-form-item>
                     <a-form-item label="开课时间" name="startTime">
-                        <a-range-picker v-model:value="state.formState.startTime" style="width: 100%" />
+                        <a-space direction="vertical">
+                        <a-date-picker v-model:value="state.formState.startTime" show-time format="YYYY-MM-DD HH:mm:ss"
+                            placeholder="开课时间" 
+                            :disabled-date="disabledStartDate"
+                            @openChange="handleStartOpenChange" />
+                        <a-date-picker v-model:value="state.formState.endTime" 
+                        :disabled-date="disabledEndDate"
+                        show-time format="YYYY-MM-DD HH:mm:ss"
+                            placeholder="结课时间" :open="endOpen" @openChange="handleEndOpenChange" />
+                        </a-space>
                     </a-form-item>
                     <a-form-item label="班级" name="clsIds">
                         <a-select v-model:value="state.formState.clsIds" mode="tags" placeholder="请选择参加的班级">
@@ -38,14 +50,14 @@
                     </a-form-item>
                     <a-form-item label="课程封面">
                         <a-upload v-model:file-list="state.fileList" class="avatar-uploader" name="image"
-                            :show-upload-list="true" list-type="picture-card" :customRequest="customRequest" :beforeUpload="beforeUpload">
-                            <img v-if="state.formState.image" :src="state.formState.image" alt="avatar" />
-                            <div v-else>
+                            :show-upload-list="true" list-type="picture-card" :headers="headers"
+                            :before-upload="beforeUpload" :customRequest="customRequest" @change="handleChange">
+                            <a-img v-if="state.formState.image" :src="state.formState.image" alt="avatar" />
+                            <div>
                                 <loading-outlined v-if="imgLoading"></loading-outlined>
                                 <plus-outlined v-else></plus-outlined>
                                 <div class="ant-upload-text">上传</div>
                             </div>
-
                         </a-upload>
                     </a-form-item>
                     <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
@@ -60,38 +72,78 @@
 </template>
 
 <script lang="ts" setup>
+import { ref, reactive, toRaw, inject, nextTick } from 'vue';
 import CardList from '@/components/CardList/index.vue'
+import { getStudentCourse, addCourse, getCourse } from '@/network/course.js'
+import { uploadImage, getImage } from '@/network/upload.js'
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
-import { getStudentCourse, addCourse } from '@/network/course.js'
-import { ref, reactive, inject, toRaw } from 'vue';
-import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
-
+import { roleRequest } from '@/tool/index'
+import moment from 'moment';
 const userStore = useUserStore()
-const router = useRouter()
+
 const skeletonLoading = ref<boolean>(false)
 skeletonLoading.value = true
-console.log(userStore.isTeacher);
+
+// roleRequest(getCourse, getStudentCourse)
+// .then((res: any) => {
+//     console.log(res)
+//     state.dataList = res
+//     skeletonLoading.value = false
+// })
+
+const endOpen = ref<boolean>(false);
+const disabledStartDate = (startTime: any) => {
+    if (!startTime || !state.formState.endTime) {
+        return false;
+    }
+    return startTime.valueOf() > state.formState.endTime.valueOf();
+};
+const disabledEndDate = (endTime: any) => {
+    if (!endTime || !state.formState.startTime) {
+        return false;
+    }
+    return state.formState.startTime.valueOf() >= endTime.valueOf();
+};
+const handleStartOpenChange = (open: boolean) => {
+    if (!open) {
+        endOpen.value = true;
+    }
+};
+const handleEndOpenChange = (open: boolean) => {
+    endOpen.value = open;
+};
+
+function dateFromat(val: any) {
+    return moment(val).format('YYYY-MM-DD HH:mm:ss')
+}
+
 
 //获取学生课程
-getStudentCourse().then((res: any) => {
-    if (res.data.code === 200) {
-        state.dataList = res.data.data
-        skeletonLoading.value = false
-    } else {
-        return Promise.reject(res.data.msg)
-    }
-}).catch((err: any) => console.log(err))
+// getStudentCourse().then((res: any) => {
+//     if (res.data.code === 200) {
+//         state.dataList = res.data.data
+//         skeletonLoading.value = false
+//     } else {
+//         return Promise.reject(res.data.msg)
+//     }
+// }).catch((err: any) => console.log(err))
 
 //获取老师课程
+getCourse().then((res: any) => {
+    console.log(res.data);
+    state.dataList = res.data.data
+    skeletonLoading.value = false
+})
 
 const state = reactive({
     //课程数据
     dataList: [],
     formState: {
-        course: '',
+        courseName: '',
         startTime: '',
+        endTime: '',
         clsIds: [],
         experimentalPlatform: [],
         image: ''
@@ -99,90 +151,97 @@ const state = reactive({
     fileList: []
 })
 
-//打开弹窗
+
 const visible = ref(false)
-function openModal(str: string, obj?: any, i?: number,) {
-    if (str === 'exam') {
-        window.open('https://www.baidu.com', '_blank');
-    } else if (str === 'detail') {
-        router.push({
-            name: 'courseDetail',
-            query: obj
-        })
-    } else if (str === 'addCourse') {
-        visible.value = true
-        formRef.value.resetFields();
-    }
+const addCourseModal = () => {
+    visible.value = true
 }
 
 const customRequest = (image: any) => {
-    console.log(image, 'image');
-    const form = new FormData()
+    const fileName = image.file.name
+    const formData = new FormData()
+    formData.append('image', image.file, fileName)
+    uploadImage(formData)
+        .then((res: any) => {
+            console.log(res.data.data)
+            getImage({
+                imageName: res.data.data
+            })
+                .then((res: any) => {
+                    console.log(res.data.data);
+                    state.formState.image = res.data.data;
+                    message.success(fileName + '上传成功')
+                    image.onSuccess(res.data.data, image)
+                    imgLoading.value = false;
 
-    // const formDataObj = {};
-    // for (let [key, value] of form.entries()) {
-    //     formDataObj[key] = value;
-    // }
-    // console.log(formDataObj,'formDataObj');
-    
+                })
+
+        }).catch((err: any) => {
+            image.onError(err)
+            console.log(err)
+            imgLoading.value = false;
+
+        })
 }
-
-// function getBase64(img: Blob, callback: (base64Url: string) => void) {
-//   const reader = new FileReader();
-//   reader.addEventListener('load', () => callback(reader.result as string));
-//   reader.readAsDataURL(img);
-// }
+const headers = {
+    authorization: `Bearer ${sessionStorage.getItem('token')}`,
+}
 const imgLoading = ref(false)
-// const handleChange = (info:any) => {
-//     if (info.file.status === 'uploading') {
-//         imgLoading.value = true;
-//         return;
-//     }
-//     if (info.file.status === 'done') {
-//         // Get this url from response in real world.
-//         getBase64(info.file.originFileObj, (base64Url: string) => {
-//             console.log(base64Url,'base64Url');
+const handleChange = (info: any) => {
+    if (info.file.status === 'done') {
+        imgLoading.value = false
+    }
+    if (info.file.status === 'error') {
+        imgLoading.value = false;
+        message.error('上传失败');
+    }
+};
 
-//             state.formState.image = base64Url;
-//             imgLoading.value = false;
-//         });
-//     }
-//     if (info.file.status === 'error') {
-//         imgLoading.value = false;
-//         message.error('upload error');
-//     }
-// };
+const beforeUpload = (file: any) => {
 
-const beforeUpload = (file:any) => {
+    imgLoading.value = true
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isJpgOrPng) {
-        message.error('只可以上传JPG/PNG格式的图片');
+        message.error('只可以上传JPG/PNG格式!');
     }
     const isLt2M = file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
-        message.error('图片最大不超过2MB');
+        message.error('图片大小不能超过2MB!');
+
     }
     return isJpgOrPng && isLt2M;
 };
 
 const rules = {
-    course: [{ required: true, message: '请输入课程名', trigger: 'blur' }],
+    courseName: [{ required: true, message: '请输入课程名', trigger: 'blur' }],
     startTime: [{ required: true, message: '请选择时间范围', trigger: 'blur' }],
     clsIds: [{ required: true, message: '请选择参加班级', trigger: 'change' }],
     experimentalPlatform: [{ required: true, message: '请选择实验平台', trigger: 'change' }],
 };
+
 const formRef = ref()
 const formSubmit = () => {
     formRef.value
         .validate()
         .then(() => {
-            console.log(state.fileList, 'fileList');
+            // console.log(state.fileList, 'fileList');
             console.log('values', state.formState, toRaw(state.formState))
-            // addCourse(toRaw(state.formState))
-            //     .then((res: any) => {
-            //         console.log(res.data);
-            //     })
-            // visible.value = false
+            const data = toRaw(state.formState)
+            data.startTime = dateFromat(data.startTime)
+            data.endTime = dateFromat(data.endTime)
+
+            addCourse(data)
+                .then((res: any) => {
+                    if (res.data.code === 200) {
+                        message.success('添加成功')
+                        visible.value = false
+                    }else {
+                        message.error(res.data.msg)
+                    }
+                }).catch((err:any) => {
+                    message.error(err.data.msg)
+                })
+
         })
         .catch((error: any) => {
             console.log('error', error);

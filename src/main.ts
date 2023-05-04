@@ -8,8 +8,8 @@ import router from './router'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css';
 import '@/assets/main.css'
-// import ECharts from 'vue-echarts'  
-// import "echarts";  
+
+
 
 const app = createApp(App)
 

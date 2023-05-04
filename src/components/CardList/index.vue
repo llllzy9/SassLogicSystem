@@ -5,12 +5,12 @@
                 <img alt="example" style="object-fit:cover;height: 250px;" :src="courseStore.courseImg(card.avatar)">
             </template>
             <template class="ant-card-actions" #actions>
-                <span @click="openModal('exam',card,index,)">进入实验</span>
-                <a-badge :dot="courseStore.inforNum()>0">
+                <a @click="openModal('exam',card,index,)">进入实验</a>
+                <!-- <a-badge :dot="courseStore.inforNum()>0"> -->
                 <a @click="openModal('detail',card,index,)">查看详情</a>
-                </a-badge>
+                <!-- </a-badge> -->
             </template>
-            <a-card-meta :title="card.course">
+            <a-card-meta :title="card.courseName">
                 <template #description>
                     <p>实验操作平台：{{ card.experimentalPlatform }}</p>
                     <p>任课老师：{{card.nickname}}</p>
@@ -24,6 +24,8 @@
 
 <script lang="ts" setup>
 import {useCourseStore} from '@/stores/course.ts'
+import { useRouter } from 'vue-router';
+const router = useRouter()
 const courseStore = useCourseStore()
 
 interface Info{
@@ -36,15 +38,24 @@ interface Info{
 }
 interface Props{
     dataList?:Info[]
-    openModal?:(str:string,obj:any,i:number,)=> void
 }
 const props = withDefaults(defineProps<Props>(), {
     dataList:() => [],
-    openModal:(i,str) => {
-        console.log(i,str);
-    }
-    
 })
+
+//打开弹窗
+function openModal(str: string, obj?: any, i?: number,) {
+    console.log(1);
+    
+    if (str === 'exam') {
+        window.open('https://www.baidu.com', '_blank');
+    } else if (str === 'detail') {
+        router.push({
+            name: 'courseDetail',
+            query: obj
+        })
+    }
+}
 </script>
 <style lang="scss" scoped>
 </style>

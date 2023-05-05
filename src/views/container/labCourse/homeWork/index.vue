@@ -6,7 +6,7 @@
     </myTable>
     <div class="full-popUps">
         <a-modal v-model:visible="fullVisible" :title="state.fullPopUps.title" width="100%" wrapClassName="full-modal">
-            <div class="top-info" :style="{ ...fullPopStyle }">
+            <div class="top-info" style="display: flex;flex-direction: column;align-items: center;justify-content: space-around;height: 10%;border-bottom: 2px dashed #eee;font-size: 18px;">
                 <a-row>
                     <a-col :span="2"><span>满分：{{ state.fullPopUps.score }}</span></a-col>
                 </a-row>
@@ -73,14 +73,13 @@ import { distributeHomework } from '@/network/course.js'
 import { useUserStore } from '@/stores/user'
 const userStore = useUserStore()
 interface Props {
-    data: object
+    data: {
+        loading:boolean
+        homeWorkList:object[]
+    }
 }
 const props = withDefaults(defineProps<Props>(), {
-    data: () => {
-        return {
-            homeWorkList: []
-        }
-    }
+   
 })
 
 const state = reactive({
@@ -131,7 +130,7 @@ const state = reactive({
                 },
                 {
                     label: '删除',
-                    func: (obj: any) => handleView(obj),
+                    func: (obj: any) => handleDelete(obj),
                     type: 'danger',
                     display:userStore.isTeacher
                 }
@@ -156,16 +155,6 @@ const state = reactive({
         content: ''
     },
 })
-
-const fullPopStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItem: 'center',
-    justifyContent: 'space-around',
-    height: '10%',
-    borderBottom: '2px dashed #eee',
-    fontSize: '18px'
-}
 
 const fullVisible = ref<boolean>(false)
 function openFullModal(obj: any) {

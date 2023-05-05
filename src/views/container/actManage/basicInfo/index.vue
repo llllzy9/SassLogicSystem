@@ -100,7 +100,12 @@ const state = reactive({
         phoneNumber: '',
         school: ''
     },
-    class: []
+    class: [
+        {
+            id: '',
+            cls: ''
+        }
+    ]
 })
 const { formData } = toRefs(state)
 
@@ -164,7 +169,7 @@ const optionChange = (value: any) => {
 
 const rules = {
     nickname: [{ required: true, message: '请输入长度为6以下的昵称', max: 6, trigger: 'change' }],
-    email:[{ required: true, message: '请输入正确的邮箱格式', trigger: 'change' }],
+    email: [{ required: true, message: '请输入正确的邮箱格式', trigger: 'change' }],
     clsName: [{ required: true, message: '请选择班级', trigger: 'blur' }],
     sex: [{ required: true, message: '请选择性别', trigger: 'change' }],
     phoneNumber: [{ required: true, message: '请输入正确格式的手机号码', max: 11, min: 11, trigger: 'blur', type: 'string' }],

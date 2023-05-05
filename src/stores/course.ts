@@ -5,7 +5,7 @@ export const useCourseStore = defineStore('course', () => {
 
     const informationList = ref([])
     const deleteInfor = (id:any):void => {
-        informationList.value.forEach((item,index) => {
+        informationList.value.forEach((item:any,index) => {
             if(item.id === id){
                 informationList.value.splice(index,1)
             }

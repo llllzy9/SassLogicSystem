@@ -52,7 +52,7 @@
         <a-modal v-model:visible="visible" width="600px" title="发布信息">
             <template #footer>
             </template>
-            <a-form ref="formRef" :model="state.formState" :rules="rules" :label-col="{ span: 4 }"
+            <a-form ref="formRef" :model="state.formState" :label-col="{ span: 4 }"
                 :wrapper-col="{ span: 14 }">
                 <a-form-item label="主题" name="theme">
                     <a-input v-model:value="state.formState.theme" placeholder="请输入标题" />
@@ -86,16 +86,18 @@ import { useUserStore } from '@/stores/user'
 const userStore = useUserStore()
 const courseStore = useCourseStore()
 interface Props {
-    data: object
+    data: {
+        infoList:object[]
+        loading:boolean
+    }
 }
 const props = withDefaults(defineProps<Props>(), {
-    data: () => {
-        return {}
-    }
 })
-
 const state = reactive({
-    popData: {},
+    popData: {
+        content:'',
+        theme:''
+    },
     formState:{
         theme:'',
         clsIds:[],

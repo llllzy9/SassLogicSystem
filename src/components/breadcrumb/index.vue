@@ -1,6 +1,6 @@
 <template>
   <a-breadcrumb class="breadcrumb">
-    <a-breadcrumb-item v-for="(item, index) in breadList" :key="item.name">
+    <a-breadcrumb-item v-for="(item, index) in breadList" :key="index">
       <router-link v-if="item.name != name && index != 1" :to="{ path: item.path === '' ? '/' : item.path }">{{
         item.meta.title }}</router-link>
       <span v-else>{{ item.meta.title }}</span>
@@ -14,8 +14,17 @@ import { ref, reactive, watch } from 'vue';
 import { useRoute } from 'vue-router';
 const route = useRoute()
 
-const name = ref('')
-const breadList = ref([''])
+interface Route{
+  name:string
+  path:string
+  meta:{
+    title:string
+  }
+}
+
+const name = ref()
+const breadList = ref<Route[]>([
+])
 function getBreadcrumb() {
   breadList.value = []
   name.value = route.name
@@ -28,6 +37,20 @@ getBreadcrumb()
 
 watch(
   route, () => {
-  getBreadcrumb()
+    getBreadcrumb()
+  })
+
+watch(breadList.value, (newValue) => {
+  if (newValue.length === 0) {
+    breadList.value = [
+      {
+        name: '主页',
+        path: '/home',
+        meta: {
+          title: '首页'
+        }
+      }
+    ]
+  }
 })
 </script>

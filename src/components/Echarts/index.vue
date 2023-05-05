@@ -3,7 +3,7 @@
     <div ref="main" :style="{ width: '100%', height: '400px' }"></div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { ref, onMounted, defineProps } from "vue";
 //  按需引入 echarts
 import * as echarts from "echarts";

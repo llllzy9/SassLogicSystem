@@ -43,8 +43,8 @@ export function modifyHomework(data) {
     })
 }
 
-//获取信息
-export function getMessage() {
+//学生获取信息
+export function stdGetMessage() {
     return request({
         url:'/student/getMessage',
         methdo:'get'
@@ -59,6 +59,9 @@ export function setMessageState(data) {
         params:data
     })
 }
+
+
+
 
 //老师添加课程
 export function addCourse(data) {
@@ -86,10 +89,47 @@ export function getDistributeHomework() {
     })
 }
 
+//老师发布信息
+export function publishMessage(data) {
+    return request({
+        url:'/teacher/publishMessage',
+        method:'post',
+        data:data
+    })
+}
+
+
+//删除信息
+export function deleteMessage(params){
+    return request({
+        url:'/teacher/deleteMessage',
+        method:'delete',
+        params:params
+    })
+}
+
+//获取老师发的信息
+export function tecGetMessage(params) {
+    return request({
+        url:'/teacher/getMessage',
+        method:'get',
+        params:params
+    })
+}
+
 //获取老师自己教的课程
 export function getCourse() {
     return request({
         url:'/teacher/getCourse',
         method:'get'
+    })
+}
+
+//删除课程
+export function deleteCourse(id) {
+    return request({
+        url:'/teacher/deleteCourse',
+        method: 'delete',
+        params:id
     })
 }

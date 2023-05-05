@@ -2,7 +2,6 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 // import {use} from "echarts/core"
 
-
 import App from './App.vue'
 import router from './router'
 import Antd from 'ant-design-vue'

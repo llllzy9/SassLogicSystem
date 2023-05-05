@@ -13,7 +13,7 @@
 
     <div class="full-popUps-student">
         <a-modal v-model:visible="fullVisible" :title="state.fullPopUps.title" width="100%" wrapClassName="full-modal">
-            <div class="top-info" :style="{ ...fullPopStyle }">
+            <div class="top-info" style="display: flex;flex-direction: column;align-items: center;justify-content: space-around;height: 10%;border-bottom: 2px dashed #eee;font-size: 18px;">
                 <a-row>
                     <a-col :span="2"><span>满分：{{ state.fullPopUps.score }}</span></a-col>
                 </a-row>
@@ -99,8 +99,8 @@ const columns = [
 const activeKey = ref('1')
 const state = reactive({
     allHomeWork: [{}],
-    doneHomeWork: [],
-    noneHomeWork: [],
+    doneHomeWork: [{}],
+    noneHomeWork: [{}],
     fullPopUps: {
         title: '',
         score: '',
@@ -109,17 +109,6 @@ const state = reactive({
         content: ''
     }
 })
-
-
-const fullPopStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItem: 'center',
-    justifyContent: 'space-around',
-    height: '10%',
-    borderBottom: '2px dashed #eee',
-    fontSize: '18px'
-}
 
 const fullVisible = ref<boolean>(false)
 function openFullModal(obj: any) {

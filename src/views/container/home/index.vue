@@ -53,7 +53,6 @@
                 <a-list item-layout="horizontal" :data-source="data.homeworkStatus">
                   <template #renderItem="{ item }">
                     <a-list-item>
-                      
                       <template #extra>
                           <p>{{ item.finishedNum }} / {{ item.allNum }}</p>
                         </template>
@@ -75,7 +74,7 @@
               <template #extra><a href="#">添加</a></template>
                 <a-list item-layout="horizontal" :data-source="data.note">
                   <template #renderItem="{ item }">
-                    <a-list-item>
+                    <a-list-item class="noteText">
                         <template #actions>
                           <a type="primary" @click="handleView(item)">编辑</a>
                           <a type="primary" @click="handleView(item)">删除</a>
@@ -88,7 +87,6 @@
                           <a-avatar :src="item.img" />
                         </template>
                       </a-list-item-meta>
-                      {{ item.content }}
                     </a-list-item>
                   </template>
                 </a-list>
@@ -135,7 +133,7 @@ const data =reactive({
   note:[{ //备忘录 可编辑可删除可添加
     id:'',
     img: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png', //用户头像
-    content:'444444444444444444444444444444444444444444444444444444444444444444444', //内容 0
+    content:'4444444444444444', //内容 0
   }]
 })
 
@@ -174,5 +172,8 @@ function handleView (item:any) {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+.noteText{
+  width: auto;
 }
 </style>

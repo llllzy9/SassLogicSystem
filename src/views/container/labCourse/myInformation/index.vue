@@ -105,7 +105,16 @@ const state = reactive({
         content: ''
     }
 })
-const allClasses = ref([])
+interface Class{
+    id:string | number
+    cls:string
+}
+const allClasses = ref<Class[]>([
+    {
+        id:'',
+        cls:''
+    }
+])
 getAllClass()
     .then((res:any) => {
         allClasses.value = res.data.data

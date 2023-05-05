@@ -193,7 +193,7 @@ getMessage()
       data.messageArr = res.data.data
     }
   })
-function handleView(item) {
+function handleView(item:any) {
   console.log('查看', item)
   // 对列表项数据进行对应操作
 }

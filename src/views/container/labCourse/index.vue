@@ -40,14 +40,13 @@
                     </a-form-item>
                     <a-form-item label="班级" name="clsIds">
                         <a-select v-model:value="state.formState.clsIds" mode="tags" placeholder="请选择参加的班级">
-                            <a-select-option value="1">计算机科学与技术1907</a-select-option>
-                            <a-select-option value="2">计算机科学与技术1909</a-select-option>
-                        </a-select>
+                        <a-select-option :value="opt.id" v-for="opt in allClasses" :key="opt.id">{{ opt.cls }}</a-select-option>
+                    </a-select>
                     </a-form-item>
                     <a-form-item label="实验平台" name="experimentalPlatform">
                         <a-select v-model:value="state.formState.experimentalPlatform" placeholder="请选择实验平台">
-                            <a-select-option value="1">数字逻辑虚拟仿真实验平台</a-select-option>
-                            <a-select-option value="2">计算机网络虚拟仿真实验平台</a-select-option>
+                            <a-select-option value="数字逻辑虚拟仿真实验平台">数字逻辑虚拟仿真实验平台</a-select-option>
+                            <a-select-option value="计算机网络虚拟仿真实验平台">计算机网络虚拟仿真实验平台</a-select-option>
                         </a-select>
                     </a-form-item>
                     <a-form-item label="课程封面">
@@ -77,6 +76,7 @@
 import { ref, reactive, toRaw, inject, nextTick } from 'vue';
 import CardList from '@/components/CardList/index.vue'
 import { getStudentCourse, addCourse, getCourse } from '@/network/course.js'
+import {getAllClass} from '@/network/user.js'
 import { uploadImage, getImage } from '@/network/upload.js'
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
@@ -95,12 +95,16 @@ const state = reactive({
         startTime: '',
         endTime: '',
         clsIds: [],
-        experimentalPlatform: '',
+        experimentalPlatform: [],
         imageName: ''
     },
     fileList: []
 })
-
+const allClasses = ref([])
+getAllClass()
+    .then((res:any) => {
+        allClasses.value = res.data.data
+    })
 //数据请求
 async function getData() {
     try {

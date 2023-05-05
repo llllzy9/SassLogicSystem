@@ -1,12 +1,12 @@
 <template>
-    <div class="btn-wrap" v-if="userStore.isTeacher">
+    <div class="btn-wrap" v-if="roles == 2">
         <a-button type="primary" @click="assignHomework">布置作业</a-button>
     </div>
     <myTable :loading="data.loading" :dataSource="data.homeWorkList" :columns="state.columns">
     </myTable>
     <div class="full-popUps">
         <a-modal v-model:visible="fullVisible" :title="state.fullPopUps.title" width="100%" wrapClassName="full-modal">
-            <div class="top-info" style="display: flex;flex-direction: column;align-items: center;justify-content: space-around;height: 10%;border-bottom: 2px dashed #eee;font-size: 18px;">
+            <div class="top-info" style="height: 10%;border-bottom: 2px dashed #eee;font-size: 18px;">
                 <a-row>
                     <a-col :span="2"><span>满分：{{ state.fullPopUps.score }}</span></a-col>
                 </a-row>
@@ -36,21 +36,22 @@
                 <a-form-item label="分值" name="score">
                     <a-input v-model:value="state.formState.score" placeholder="请设置分数" />
                 </a-form-item>
-                <a-form-item label="时间" name="startTime">
-                    <a-space direction="vertical">
-                        <a-date-picker v-model:value="state.formState.startTime" :disabled-date="disabledStartDate"
-                            show-time format="YYYY-MM-DD HH:mm:ss" placeholder="开始时间" @openChange="handleStartOpenChange" />
-                        <a-date-picker v-model:value="state.formState.endTime" :disabled-date="disabledEndDate" show-time
-                            format="YYYY-MM-DD HH:mm:ss" placeholder="截至时间" :open="endOpen"
-                            @openChange="handleEndOpenChange" />
-                    </a-space>
-                    <!-- <a-range-picker v-model:value="state.formState.time" style="width: 100%" :format="dateFormat"/> -->
+                <a-form-item label="开课时间" name="startTime">
+
+                    <a-date-picker v-model:value="startTimeVal" show-time format="YYYY-MM-DD HH:mm:ss" placeholder="开课时间"
+                        @change="onStartChange" :disabled-date="disabledStartDate" @openChange="handleStartOpenChange" />
+
+                </a-form-item>
+                <a-form-item label="结课时间" name="startTime">
+                    <a-date-picker v-model:value="endTimeVal" :disabled-date="disabledEndDate" show-time
+                        format="YYYY-MM-DD HH:mm:ss" placeholder="结课时间" :open="endOpen" @openChange="handleEndOpenChange"
+                        @change="onEndChange" />
+
+
                 </a-form-item>
                 <a-form-item label="班级" name="clsIds">
                     <a-select v-model:value="state.formState.clsIds" mode="tags" placeholder="请选择参加的班级">
-                        <a-select-option value="1">计算机科学与技术1907</a-select-option>
-                        <a-select-option value="2">计算机科学与技术1908</a-select-option>
-                        <a-select-option value="2">计算机科学与技术1909</a-select-option>
+                        <a-select-option :value="opt.id" v-for="opt in allClasses" :key="opt.id">{{ opt.cls }}</a-select-option>
                     </a-select>
                 </a-form-item>
                 <a-form-item label="内容" name="content">
@@ -67,21 +68,30 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, toRaw } from 'vue'
+import { reactive, ref, toRaw, inject, defineEmits, createVNode } from 'vue'
 import myTable from '@/components/Table/index.vue'
-import { distributeHomework } from '@/network/course.js'
-import { useUserStore } from '@/stores/user'
-const userStore = useUserStore()
+import { Modal, message } from 'ant-design-vue';
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { distributeHomework,deleteHomeWork } from '@/network/course.js'
+import {getAllClass} from '@/network/user.js'
+import type { Moment } from 'moment';
+const roles = inject('roles')
+const emit = defineEmits(['refresh'])
 interface Props {
     data: {
-        loading:boolean
-        homeWorkList:object[]
+        loading: boolean
+        homeWorkList: object[]
+        courseId:string
     }
 }
 const props = withDefaults(defineProps<Props>(), {
-   
-})
 
+})
+const allClasses = ref([])
+getAllClass()
+    .then((res:any) => {
+        allClasses.value = res.data.data
+    })
 const state = reactive({
     columns: [
         {
@@ -101,7 +111,7 @@ const state = reactive({
             title: '完成时间',
             dataIndex: 'startTime',
             time: true,
-            align:'center'
+            align: 'center'
         },
         {
             title: '状态',
@@ -120,19 +130,19 @@ const state = reactive({
                     label: '开始',
                     func: (obj: any) => openFullModal(obj),
                     type: 'primary',
-                    display:!userStore.isTeacher
+                    display: !(roles == 2)
                 },
                 {
                     label: '编辑',
                     func: (obj: any) => openFullModal(obj),
                     type: 'primary',
-                    display:userStore.isTeacher
+                    display: roles !== 2
                 },
                 {
                     label: '删除',
                     func: (obj: any) => handleDelete(obj),
                     type: 'danger',
-                    display:userStore.isTeacher
+                    display: roles !== 2
                 }
             ]
 
@@ -147,12 +157,12 @@ const state = reactive({
     },
     formState: {
         title: '',
-        time: '',
         startTime: '',
         endTime: '',
         clsIds: [],
         score: '',
-        content: ''
+        content: '',
+        courseId:''
     },
 })
 
@@ -164,7 +174,29 @@ function openFullModal(obj: any) {
 }
 
 function handleDelete(obj: any) {
-    console.log(obj);
+    console.log(obj)
+
+    Modal.confirm({
+        title: () => '你确定要删除这个作业吗?',
+        icon: () => createVNode(ExclamationCircleOutlined),
+        okText: () => '删除',
+        okType: 'danger',
+        cancelText: () => '取消',
+        onOk() {
+            deleteHomeWork({
+                id:obj.id
+            })
+                .then((res:any) => {
+                    if(res.data.code === 200){
+                        message.success('删除成功')
+                        emit('refresh')
+                    }
+                })
+        },
+        onCancel() {
+            console.log('Cancel');
+        },
+    });
 }
 
 function gotoExam() {
@@ -179,7 +211,8 @@ const rules = {
     content: [{ required: true, message: '请输入内容', trigger: 'change' }],
 };
 
-
+const startTimeVal = ref<Moment>()
+const endTimeVal = ref<Moment>()
 const endOpen = ref<boolean>(false);
 const disabledStartDate = (startTime: any) => {
     if (!startTime || !state.formState.endTime) return false;
@@ -206,9 +239,14 @@ const formSubmit = () => {
         .validate()
         .then(() => {
             console.log('values', state.formState, toRaw(state.formState))
-            distributeHomework(toRaw(state.formState))
+            const reqdata = toRaw(state.formState)
+            reqdata.courseId = props.data.courseId
+            distributeHomework(reqdata)
                 .then((res: any) => {
-                    console.log(res.data)
+                    if(res.data.code === 200){
+                        emit('refresh')
+                        visible.value = false
+                    }
                 })
         })
         .catch((error: any) => {
@@ -217,6 +255,13 @@ const formSubmit = () => {
 }
 const resetForm = () => {
     formRef.value.resetFields();
+}
+
+function onStartChange(value: any[], dateString: string[]) {
+    state.formState.startTime = dateString.toString()
+}
+function onEndChange(value: any[], dateString: string[]) {
+    state.formState.endTime = dateString.toString()
 }
 </script>
 <style>

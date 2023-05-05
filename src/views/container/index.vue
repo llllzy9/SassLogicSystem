@@ -13,7 +13,7 @@
                     <Head />
                 </a-layout-header>
                 <a-layout-content style="margin: 0 16px">
-                    <myBreadcrumb style="margin: 16px 0"/>
+                    <myBreadcrumb style="margin: 16px 0" />
                     <div :style="{ padding: '24px', background: '#fff', minHeight: '360px', height: '93%' }">
                         <RouterView />
                     </div>
@@ -25,7 +25,7 @@
 
 <script lang="ts" setup>
 import { CodeSandboxCircleFilled } from '@ant-design/icons-vue'
-import { getUserInfo } from '@/network/user.js'
+import { getUserInfo, getAllClass } from '@/network/user.js'
 import { useUserStore } from '@/stores/user'
 import { useCourseStore } from '@/stores/course'
 import { stdGetMessage } from '@/network/course.js'
@@ -34,7 +34,8 @@ import Head from '@/components/Header/index.vue'
 import myBreadcrumb from '@/components/breadcrumb/index.vue'
 import { ref, provide } from 'vue';
 const roles = sessionStorage.getItem('roles')
-provide('roles',roles)
+provide('roles', roles)
+
 const courseStore = useCourseStore()
 const userStore = useUserStore()
 getUserInfo()
@@ -44,12 +45,12 @@ getUserInfo()
         }
     })
     .catch((err: any) => console.log(err))
-    stdGetMessage()
-        .then((res:any) => {
-            if(res.data.code === 200){
-                courseStore.informationList = res.data.data
-            }
-        })
+stdGetMessage()
+    .then((res: any) => {
+        if (res.data.code === 200) {
+            courseStore.informationList = res.data.data
+        }
+    })
 const collapsed = ref<boolean>(false)
 </script>
 

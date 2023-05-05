@@ -1,5 +1,5 @@
 <template>
-    <div class="btn-wrap" v-if="userStore.isTeacher">
+    <div class="btn-wrap" v-if="roles == 2">
         <a-button type="primary" @click="publishInformation">发布信息</a-button>
     </div>
     <div class="info-list">
@@ -21,7 +21,7 @@
                         </template>
                     </a-list-item-meta>
                     <div style="color:#aaa">
-                        <span style="margin-right: .5rem;">{{ '2023-04-16 14:32' }}</span>
+                        <span style="margin-right: .5rem;">{{ item.publishTime }}</span>
                         <span v-show="!courseStore.inforState(item.state)">{{ '已读' }}</span>
                     </div>
                 </a-list-item>
@@ -37,9 +37,9 @@
             </template>
             <div style="display: flex;align-items: center;padding-bottom: 10px;">
                 <a-avatar :size="40" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-                <span style="margin-left: .5rem;color:#666;margin-right: .5rem;">{{ '溪利亚' }}</span>
+                <span style="margin-left: .5rem;color:#666;margin-right: .5rem;">{{ state.popData.nickname }}</span>
                 <a-tag color="orange">老师</a-tag>
-                <span style="color:#aaa">{{ '2023-04-26 19:14' }}</span>
+                <span style="color:#aaa">{{ state.popData.publishTime }}</span>
             </div>
             <div style="margin:15px 45px">
                 {{ state.popData.content }}
@@ -52,15 +52,13 @@
         <a-modal v-model:visible="visible" width="600px" title="发布信息">
             <template #footer>
             </template>
-            <a-form ref="formRef" :model="state.formState" :label-col="{ span: 4 }"
-                :wrapper-col="{ span: 14 }">
+            <a-form ref="formRef" :model="state.formState" :label-col="{ span: 4 }" :wrapper-col="{ span: 14 }">
                 <a-form-item label="主题" name="theme">
                     <a-input v-model:value="state.formState.theme" placeholder="请输入标题" />
                 </a-form-item>
                 <a-form-item label="班级" name="clsIds">
                     <a-select v-model:value="state.formState.clsIds" mode="tags" placeholder="请选择参加的班级">
-                        <a-select-option value="1">计算机科学与技术1907</a-select-option>
-                        <a-select-option value="2">计算机科学与技术1909</a-select-option>
+                        <a-select-option :value="opt.id" v-for="opt in allClasses" :key="opt.id">{{ opt.cls }}</a-select-option>
                     </a-select>
                 </a-form-item>
                 <a-form-item label="内容" name="content">
@@ -77,34 +75,41 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, createVNode,toRaw } from 'vue';
-import { setMessageState } from '@/network/course.js'
+import { reactive, ref, createVNode, toRaw, inject } from 'vue';
+import { setMessageState, deleteMessage, publishMessage } from '@/network/course.js'
+import { getAllClass } from '@/network/user.js'
 import { useCourseStore } from '@/stores/course'
-import { Modal } from 'ant-design-vue';
+import { Modal, message } from 'ant-design-vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
-import { useUserStore } from '@/stores/user'
-const userStore = useUserStore()
+const roles = inject('roles')
+const emit = defineEmits(['refresh'])
 const courseStore = useCourseStore()
 interface Props {
     data: {
-        infoList:object[]
-        loading:boolean
+        infoList: object[]
+        loading: boolean
     }
 }
 const props = withDefaults(defineProps<Props>(), {
 })
 const state = reactive({
     popData: {
-        content:'',
-        theme:''
+        nickname:'',
+        publishTime:'',
+        content: '',
+        theme: '',
     },
-    formState:{
-        theme:'',
-        clsIds:[],
-        content:''
+    formState: {
+        theme: '',
+        clsIds: [],
+        content: ''
     }
 })
-
+const allClasses = ref([])
+getAllClass()
+    .then((res:any) => {
+        allClasses.value = res.data.data
+    })
 const inforVisible = ref(false)
 const openModal = (obj: any) => {
     const params = {
@@ -130,7 +135,15 @@ function deleteInfo(id: number) {
         okType: 'danger',
         cancelText: () => '取消',
         onOk() {
-            courseStore.deleteInfor(id)
+            deleteMessage({
+                id: id
+            })
+                .then((res: any) => {
+                    if (res.data.code === 200) {
+                        message.success('删除成功')
+                        emit('refresh')
+                    }
+                })
         },
         onCancel() {
             console.log('Cancel');
@@ -140,7 +153,10 @@ function deleteInfo(id: number) {
 const visible = ref(false)
 function publishInformation() {
     visible.value = true
+    console.log(allClasses.value);
+    
 }
+
 
 const formRef = ref()
 const formSubmit = () => {
@@ -148,6 +164,13 @@ const formSubmit = () => {
         .validate()
         .then(() => {
             console.log('values', state.formState, toRaw(state.formState))
+            publishMessage(toRaw(state.formState))
+                .then((res: any) => {
+                    if (res.data.code === 200) {
+                        console.log(res.data);
+
+                    }
+                })
         })
 }
 const resetForm = () => {

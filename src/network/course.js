@@ -89,6 +89,15 @@ export function getDistributeHomework() {
     })
 }
 
+//获取学生提交的作业
+export function getStudentHomework(params) {
+    return request({
+        url:'/teacher/getStudentHomework',
+        method:'get',
+        params:params
+    })
+}
+
 //老师发布信息
 export function publishMessage(data) {
     return request({
@@ -98,6 +107,14 @@ export function publishMessage(data) {
     })
 }
 
+//删除作业
+export function deleteHomeWork(params) {
+    return request({
+        url:'/teacher/deleteHomework',
+        method:'delete',
+        params:params
+    })
+}
 
 //删除信息
 export function deleteMessage(params){

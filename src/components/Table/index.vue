@@ -32,28 +32,6 @@
 
       </a-table-column>
     </template>
-
-    <!-- <template #tags="{ record }">
-      <span>
-        <a-tag :color="record.completionStatus ? 'green' : 'warning'">
-          {{ record.completionStatus ? '完成' : '未完成' }}
-        </a-tag>
-        <a-tag :color="(formatter(record)) ? 'red' : 'processing'">
-          {{ (formatter(record)) ? '已截至' : '未截至' }}
-        </a-tag>
-      </span>
-    </template>
-    <template #text="{ text }">
-      <a>{{ text }}</a>
-    </template>
-    <template #time="{ record }">
-      <span>{{ record.startTime }} ~ {{ record.endTime }}</span>
-    </template>
-    <template #operation="{ record }">
-      <a-button type="primary" @click="openFullModal(record)" v-if="!userStore.isTeacher">开始</a-button>
-      <a-button v-if="userStore.isTeacher" @click="handleView(record)">查看</a-button>
-      <a-button type="danger" @click="handleDelete(record)" v-if="userStore.isTeacher">删除</a-button>
-    </template> -->
   </a-table>
 </template>
 

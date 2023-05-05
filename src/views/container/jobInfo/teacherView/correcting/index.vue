@@ -63,18 +63,20 @@ const columns = [
         title: '内容描述',
         dataIndex: 'content'
     },
+    
     {
         title: '操作',
         dataIndex: 'operation',
-        align:'center',
         btns:[
             {
                 label:'批改',
                 type:'primary',
+                display:userStore.isTeacher,
                 func:(obj:any) => handleCorrecting(obj)
             },
             {
                 label:'删除',
+                display:userStore.isTeacher,
                 func:(obj:any) => handleDelete(obj)
             }
         ]
@@ -82,7 +84,15 @@ const columns = [
     }
 ]
 const state = reactive({
-    allHomeWork: [{}],
+    allHomeWork: [{
+        course:'数字逻辑',
+        title: '第一章作业',
+        score: 100,
+        startTime: '2022/06/23',
+        completionStatus:true,
+        endTime: '2024/02/12',
+        content: '完成课堂布置内容',
+    }],
     doneHomeWork: [],
     noneHomeWork: [],
     fullPopUps: {

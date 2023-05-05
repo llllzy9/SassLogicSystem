@@ -65,7 +65,10 @@ export function addCourse(data) {
     return request({
         url:'/teacher/addCourse',
         method:'post',
-        data:data
+        data:data,
+        // headers:{
+        //     'content-type':'multipart/form-data'
+        // }
     })
 }
 

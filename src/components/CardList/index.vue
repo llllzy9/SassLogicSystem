@@ -5,9 +5,10 @@
                 <img alt="example" style="object-fit:cover;height: 250px;" :src="courseStore.courseImg(card.avatar)">
             </template>
             <template class="ant-card-actions" #actions>
-                <a @click="openModal('exam',card,index,)">进入实验</a>
+                <a @click="openModal('exam',card,index)">进入实验</a>
                 <!-- <a-badge :dot="courseStore.inforNum()>0"> -->
-                <a @click="openModal('detail',card,index,)">查看详情</a>
+                <a @click="openModal('detail',card,index)">查看详情</a>
+                <a @click="openModal()">删除课程</a>
                 <!-- </a-badge> -->
             </template>
             <a-card-meta :title="card.courseName">
@@ -15,6 +16,7 @@
                     <p>实验操作平台：{{ card.experimentalPlatform }}</p>
                     <p>任课老师：{{card.nickname}}</p>
                     <p>开课时间：{{card.startTime}}</p>
+                    <p>结课时间：{{card.endTime}}</p>
                     <p>参加班级：{{card.class}}</p>
                 </template>
             </a-card-meta>
@@ -30,9 +32,10 @@ const courseStore = useCourseStore()
 
 interface Info{
     avatar:string
-    course:string
+    courseName:string
     experimentalPlatform:string
     nickname:string
+    endTime:string
     startTime:string
     class:string
 }

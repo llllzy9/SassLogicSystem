@@ -3,7 +3,7 @@
         <a-button type="primary" @click="publishInformation">发布信息</a-button>
     </div>
     <div class="info-list">
-        <a-list item-layout="horizontal" :data-source="data.infoList" :loading="data.loading">
+        <a-list item-layout="horizontal" :data-source="data.infoList">
             <template #renderItem="{ item }">
                 <a-list-item>
                     <template #actions>

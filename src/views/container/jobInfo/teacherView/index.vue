@@ -73,17 +73,26 @@ const columns = [
 const state = reactive({
     allHomeWork: [
     {
-        course:'1',
-        title: '1',
-        score: 'John Brown',
-        startTime: 32,
+        course:'数字逻辑',
+        title: '第一章作业',
+        score: 100,
+        startTime: '2022/06/23',
         completionStatus:true,
-        endTime: 'New York No. 1 Lake Park',
-        content: 'nicedeveloper',
-        address:'1'
+        endTime: '2024/02/12',
+        content: '完成课堂布置内容',
     },
     ],
-    doneHomeWork: [],
+    doneHomeWork: [
+    {
+        course:'数字逻辑',
+        title: '第一章作业',
+        score: 100,
+        startTime: '2022/06/23',
+        completionStatus:true,
+        endTime: '2024/02/12',
+        content: '完成课堂布置内容',
+    },
+    ],
     noneHomeWork: [],
     fullPopUps: {
         title: '1',

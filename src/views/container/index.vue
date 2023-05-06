@@ -38,13 +38,6 @@ provide('roles', roles)
 
 const courseStore = useCourseStore()
 const userStore = useUserStore()
-getUserInfo()
-    .then((res: any) => {
-        if (res.data.code === 200) {
-            Object.assign(userStore.userInfo, res.data.data)
-        }
-    })
-    .catch((err: any) => console.log(err))
 stdGetMessage()
     .then((res: any) => {
         if (res.data.code === 200) {

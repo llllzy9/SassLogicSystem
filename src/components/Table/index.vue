@@ -4,11 +4,11 @@
       <a-table-column :title="item.title" :data-index="item.dataIndex" :align="item.align">
         <template v-if="item.tags" #default="{ record }">
           <span>
-            <a-tag :color="record.completionStatus ? 'green' : 'warning'" v-if="item.tags.done || true">
+            <a-tag :color="record.completionStatus ? 'green' : 'warning'" v-if="item.tags.done">
               {{ record.completionStatus ? '完成' : '未完成' }}
             </a-tag>
-            <a-tag :color="(formatter(record)) ? 'red' : 'processing'" v-if="item.tags.deadline || true">
-              {{ (formatter(record)) ? '已截至' : '未截至' }}
+            <a-tag :color="(deadlineTime(record.endTime)) ? 'red' : 'processing'" v-if="item.tags.deadline">
+              {{ (deadlineTime(record.endTime)) ? '已截至' : '未截至' }}
             </a-tag>
           </span>
         </template>
@@ -37,6 +37,7 @@
 
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
+import {deadlineTime} from '@/hooks/fication'
 const userStore = useUserStore()
 interface Props {
   dataSource: Array<any>
@@ -97,11 +98,6 @@ const props = withDefaults(defineProps<Props>(), {
   ],
 })
 
-function formatter(record: any) {
-  const deadline = new Date(record.endTime).getTime()
-  const timeNow = new Date().getTime()
-  if (timeNow > deadline) return true
-  else return false
-}
+
 </script>
 <style lang="scss"></style>

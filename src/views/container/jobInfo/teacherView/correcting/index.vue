@@ -27,7 +27,7 @@
 import { ref, reactive } from 'vue';
 import myTable from '@/components/Table/index.vue'
 import { useRouter } from 'vue-router';
-import { getHomework } from '@/network/course.js';
+import { getHomework } from '@/network/homework.js';
 import { message } from 'ant-design-vue';
 import { useUserStore } from '@/stores/user'
 const userStore = useUserStore()

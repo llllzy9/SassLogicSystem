@@ -72,7 +72,7 @@ import { reactive, ref, toRaw, inject, defineEmits, createVNode } from 'vue'
 import myTable from '@/components/Table/index.vue'
 import { Modal, message } from 'ant-design-vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
-import { distributeHomework,deleteHomeWork } from '@/network/course.js'
+import { distributeHomework,deleteHomeWork } from '@/network/homework.js'
 import {getAllClass} from '@/network/user.js'
 import type { Moment } from 'moment';
 const roles = inject('roles')

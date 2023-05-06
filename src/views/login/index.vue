@@ -48,6 +48,7 @@
 import { UserOutlined, LockOutlined, EditOutlined, LoadingOutlined } from '@ant-design/icons-vue';
 import { reactive, ref, h, provide } from 'vue';
 import { useRouter } from 'vue-router';
+import { getUserInfo } from '@/network/user.js'
 import { useUserStore } from '@/stores/user'
 import { message } from 'ant-design-vue';
 import { loginRequest, registerRequest } from '../../network/login.js'
@@ -106,14 +107,22 @@ function onSubmit() {
                         if (res.data.code === 200) {
                             message.success(res.data.msg)
                             sessionStorage.setItem('token', res.data.data.token)
-                            sessionStorage.setItem('roles',res.data.data.role)
+                            sessionStorage.setItem('roles', res.data.data.role)
                             spinning.value = false
-                            userStore.rolesState()                                                      
+                            userStore.rolesState()
                             //获取用户信息
                             router.push({ path: '/container' })
                         } else {
                             return Promise.reject(res.data.msg)
                         }
+                    }).then(() => {
+                        getUserInfo()
+                            .then((res: any) => {
+                                if (res.data.code === 200) {
+                                    Object.assign(userStore.userInfo, res.data.data)
+                                }
+                            })
+                            .catch((err: any) => console.log(err))
                     })
                     .catch((err: any) => {
                         message.error(err)

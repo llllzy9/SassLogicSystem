@@ -31,7 +31,7 @@
         <template #overlay>
           <a-menu>
             <a-menu-item>
-              <RouterLink to="/">退出登录</RouterLink>
+              <a @click="layout ">退出登录</a>
             </a-menu-item>
           </a-menu>
         </template>

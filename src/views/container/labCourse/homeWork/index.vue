@@ -104,10 +104,6 @@ getAllClass()
 const state = reactive({
     columns: [
         {
-            title: '课程',
-            dataIndex: 'course',
-        },
-        {
             title: '名称',
             dataIndex: 'title',
         },
@@ -117,15 +113,18 @@ const state = reactive({
             text: true
         },
         {
-            title: '完成时间',
-            dataIndex: 'startTime',
-            time: true,
+            title: '时间范围',
+            dataIndex: 'time',
+            time: 'ranger',
             align: 'center'
         },
         {
             title: '状态',
             dataIndex: 'completionStatus',
-            tags: true,
+            tags: {
+                done:true,
+                deadline:true
+            },
         },
         {
             title: '内容描述',
@@ -145,13 +144,13 @@ const state = reactive({
                     label: '编辑',
                     func: (obj: any) => openFullModal(obj),
                     type: 'primary',
-                    display: roles !== 2
+                    display: roles == 2
                 },
                 {
                     label: '删除',
                     func: (obj: any) => handleDelete(obj),
                     type: 'danger',
-                    display: roles !== 2
+                    display: roles == 2
                 }
             ]
 

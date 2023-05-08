@@ -26,7 +26,7 @@ const params = ref({
 // 数据请求
 async function getData() {
     try {
-    const getDataList = roles == 2 ? [getDistributeHomework(), tecGetMessage()] : [getHomework(params), stdGetMessage()]
+    const getDataList = roles == 2 ? [getDistributeHomework(), tecGetMessage()] : [getHomework(params.value), stdGetMessage()]
     const responses = await Promise.allSettled(getDataList.map(request => request))
     const data = responses.map(result => {
       if (result.status === 'fulfilled') {

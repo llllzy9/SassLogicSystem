@@ -8,7 +8,7 @@
                 <a @click="openModal('exam', card, index,)">进入实验</a>
                 <!-- <a-badge :dot="courseStore.inforNum()>0"> -->
                 <a @click="openModal('detail', card, index,)">查看详情</a>
-                <a @click="openModal('delete', card, index,)">删除课程</a>
+                <a @click="openModal('delete', card, index)" v-if="roles == 2">删除课程</a>
                 <!-- </a-badge> -->
             </template>
             <a-card-meta :title="card.courseName">
@@ -27,9 +27,10 @@
 import { useCourseStore } from '@/stores/course'
 import { deleteCourse, getCourse } from '@/network/course.js'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
-import { createVNode,defineEmits } from 'vue';
+import { createVNode,defineEmits, inject } from 'vue';
 import { useRouter } from 'vue-router';
 import { Modal, message } from 'ant-design-vue';
+const roles = inject('roles')
 const emit = defineEmits(['refresh'])
 const router = useRouter()
 const courseStore = useCourseStore()

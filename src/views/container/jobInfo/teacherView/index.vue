@@ -98,7 +98,8 @@ function handleSelChange(val: string) {
 }
 function handleView(obj: any) {
     router.push({
-        name: 'correcting'
+        name: 'correcting',
+        query:obj
     })
     console.log(obj);
 }

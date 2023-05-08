@@ -31,7 +31,7 @@
         <template #overlay>
           <a-menu>
             <a-menu-item>
-              <a @click="layout ">退出登录</a>
+              <a @click="logoutExit ">退出登录</a>
             </a-menu-item>
           </a-menu>
         </template>
@@ -47,6 +47,8 @@ import { useRoute, useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user'
 import { useCourseStore } from '@/stores/course';
 import { DownOutlined } from '@ant-design/icons-vue';
+import {logout} from '@/network/login'
+import { message } from 'ant-design-vue';
 const userStore = useUserStore()
 const courseStore= useCourseStore()
 const route = useRoute()
@@ -56,6 +58,19 @@ const routeGoto = (name: string) => {
   router.push({
     name: name
   })
+}
+
+function logoutExit() {
+  logout()
+    .then((res:any) => {
+      if(res.data.code === 200){
+        message.success('退出成功')
+        sessionStorage.clear()
+        router.push({
+          path:'/'
+        })
+      }
+    })
 }
 </script>
 

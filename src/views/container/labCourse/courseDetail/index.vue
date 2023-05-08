@@ -3,7 +3,8 @@
 </template>
 
 <script lang="ts" setup>
-import { getHomework, stdGetMessage,getDistributeHomework,tecGetMessage } from '@/network/course.js'
+import { stdGetMessage,tecGetMessage } from '@/network/course.js'
+import {getHomework,getDistributeHomework} from '@/network/homework'
 import { ref, reactive,inject, watch} from 'vue';
 import { useRoute } from 'vue-router';
 import { message } from 'ant-design-vue';

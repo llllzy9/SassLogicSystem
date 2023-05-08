@@ -18,3 +18,10 @@ export function registerRequest(formData){
         params:formData
     })
 }
+
+export function logout(){
+    return request({
+        url:'/user/logout',
+        method:'get'
+    })
+}

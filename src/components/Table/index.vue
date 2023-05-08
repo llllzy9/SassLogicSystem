@@ -10,6 +10,9 @@
             <a-tag :color="(deadlineTime(record.endTime)) ? 'red' : 'processing'" v-if="item.tags.deadline">
               {{ (deadlineTime(record.endTime)) ? '已截至' : '未截至' }}
             </a-tag>
+            <a-tag v-if="item.tags.returnCause" color="warning">
+              <a>{{ record.returnCause ? '已打回' : null }}</a>
+            </a-tag>
           </span>
         </template>
 
@@ -18,7 +21,8 @@
         </template>
 
         <template v-if="item.time" #default="{ record }">
-          <span>{{ record.startTime }} ~ {{ record.endTime }}</span>
+          <span v-if="item.time === 'ranger'">{{ record.startTime }} ~ {{ record.endTime }}</span>
+          <span v-else-if="item.time === 'date'">{{ record[item.dataIndex] }}</span>
         </template>
 
         <template v-if="item.btns" #default="{ record }">
@@ -44,58 +48,7 @@ interface Props {
   columns: Array<any>
 }
 const props = withDefaults(defineProps<Props>(), {
-  dataSource: () => [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ],
 
-  columns: () => [
-    {
-      dataIndex: 'name',
-      key: 'name',
-      slots: { title: 'customTitle', customRender: 'name' },
-    },
-    {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
-    },
-    {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-    },
-    {
-      title: 'Tags',
-      key: 'tags',
-      dataIndex: 'tags',
-      slots: { customRender: 'tags' },
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      slots: { customRender: 'action' },
-    },
-  ],
 })
 
 

@@ -53,7 +53,7 @@ getUserInfo()
     .then((res: any) => {
         if (res.data.code === 200) {
             state.formData = res.data.data
-            imageUrl.value = userStore.avatarImg()
+            imageUrl.value = userStore.avatarImg(res.data.data.avatar)
         }
     })
 getAllClass()
@@ -84,7 +84,7 @@ interface FileInfo {
 const isChange = ref<boolean>(false)
 const userStore = useUserStore()
 const fileList = ref([])
-const formRef = ref();
+const formRef = ref()
 const loading = ref<boolean>(false)
 const imageUrl = ref<string>('')
 const state = reactive({

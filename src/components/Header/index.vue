@@ -16,7 +16,7 @@
 
         <a-menu-item key="pass" @click="routeGoto('myInformation')">
           <!-- <a-badge :count="courseStore.inforNum()"> -->
-            我的信息
+          我的信息
           <!-- </a-badge> -->
         </a-menu-item>
 
@@ -26,12 +26,12 @@
       <Avatar />
       <a-dropdown>
         <span>
-          {{ userStore.userInfo.nickname }}
+          {{ nickname }}
         </span>
         <template #overlay>
           <a-menu>
             <a-menu-item>
-              <a @click="logoutExit ">退出登录</a>
+              <a @click="logoutExit">退出登录</a>
             </a-menu-item>
           </a-menu>
         </template>
@@ -46,11 +46,22 @@ import Avatar from './Avatar/index.vue'
 import { useRoute, useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user'
 import { useCourseStore } from '@/stores/course';
+import { ref } from 'vue'
 import { DownOutlined } from '@ant-design/icons-vue';
-import {logout} from '@/network/login'
+import { logout } from '@/network/login'
 import { message } from 'ant-design-vue';
+import { getUserInfo } from '@/network/user.js'
+
+const nickname = ref('')
+getUserInfo()
+  .then((res: any) => {
+    if (res.data.code === 200) {
+      nickname.value = res.data.data.nickname
+    }
+  })
+  .catch((err: any) => console.log(err))
 const userStore = useUserStore()
-const courseStore= useCourseStore()
+const courseStore = useCourseStore()
 const route = useRoute()
 const router = useRouter()
 
@@ -62,12 +73,12 @@ const routeGoto = (name: string) => {
 
 function logoutExit() {
   logout()
-    .then((res:any) => {
-      if(res.data.code === 200){
+    .then((res: any) => {
+      if (res.data.code === 200) {
         message.success('退出成功')
         sessionStorage.clear()
         router.push({
-          path:'/'
+          path: '/'
         })
       }
     })
@@ -97,7 +108,9 @@ function logoutExit() {
   }
 }
 
-::v-deep .ant-badge-count, .ant-badge-dot, .ant-badge .ant-scroll-number-custom-component {
-    transform: translate(88%, -80%);
+::v-deep .ant-badge-count,
+.ant-badge-dot,
+.ant-badge .ant-scroll-number-custom-component {
+  transform: translate(88%, -80%);
 }
 </style>

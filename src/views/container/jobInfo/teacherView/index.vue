@@ -1,11 +1,11 @@
 <template>
-    <a-form-item label="课程">
+    <!-- <a-form-item label="课程">
         <a-select ref="select" v-model:value="selectValue" style="width: 120px" @change="handleSelChange">
             <a-select-option value="全部">全部</a-select-option>
             <a-select-option value="数字逻辑">数字逻辑</a-select-option>
             <a-select-option value="计算机网络" disabled>计算机网络</a-select-option>
         </a-select>
-    </a-form-item>
+    </a-form-item> -->
     <a-tabs v-model:activeKey="activeKey">
         <a-tab-pane key="1" tab="全部">
             <myTable :columns="columns" :data-source="state.allHomeWork" />

@@ -9,6 +9,15 @@ export function getHomework(data) {
     })
 }
 
+//学生获取自己提交的作业
+export function getSubmitHomework(data) {
+    return request({
+        url:'/student/getSubmitHomework',
+        method:'get',
+        params:data
+    })
+}
+
 //提交作业
 export function submitHomework(data) {
     return request({

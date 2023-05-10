@@ -5,24 +5,7 @@
     <myTable :loading="data.loading" :dataSource="data.homeWorkList" :columns="state.columns">
     </myTable>
     <div class="full-popUps">
-        <a-modal v-model:visible="fullVisible" :title="state.fullPopUps.title" width="100%" wrapClassName="full-modal">
-            <div class="top-info" style="height: 10%;border-bottom: 2px dashed #eee;font-size: 18px;">
-                <a-row>
-                    <a-col :span="2"><span>满分：{{ state.fullPopUps.score }}</span></a-col>
-                </a-row>
-                <a-row>
-                    <a-col :span="24">
-                        <p>作答时间：{{ state.fullPopUps.startTime }} ~ {{ state.fullPopUps.endTime }}</p>
-                    </a-col>
-                </a-row>
-            </div>
-            <div class="topic-content"></div>
-            <template #footer>
-                <a-button type="primary" value="large" @click="gotoExam">进入实验</a-button>
-                <a-button value="large">上传提交</a-button>
-            </template>
-
-        </a-modal>
+        <DoHomework :fullPopUps="state.fullPopUps" ref="popRef" />
     </div>
     <div class="modal">
         <a-modal v-model:visible="visible" width="600px" title="布置作业">
@@ -70,6 +53,7 @@
 <script lang="ts" setup>
 import { reactive, ref, toRaw, inject, defineEmits, createVNode } from 'vue'
 import myTable from '@/components/Table/index.vue'
+import DoHomework from '@/components/DoHomework/index.vue'
 import { Modal, message } from 'ant-design-vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { distributeHomework,deleteHomeWork } from '@/network/homework.js'
@@ -157,11 +141,12 @@ const state = reactive({
         }
     ],
     fullPopUps: {
-        title: '',
-        score: '',
-        startTime: '',
-        endTime: '',
-        content: ''
+        id:'',
+        title:'',
+        score:'',
+        startTime:'',
+        endTime:'',
+        content:'',
     },
     formState: {
         title: '',
@@ -173,17 +158,16 @@ const state = reactive({
         courseId:''
     },
 })
-
-const fullVisible = ref<boolean>(false)
+const popRef = ref()
 function openFullModal(obj: any) {
     console.log(obj);
+    
     state.fullPopUps = obj
-    fullVisible.value = true
+    popRef.value.openFullModal(obj.id)
 }
 
 function handleDelete(obj: any) {
     console.log(obj)
-
     Modal.confirm({
         title: () => '你确定要删除这个作业吗?',
         icon: () => createVNode(ExclamationCircleOutlined),
@@ -207,9 +191,6 @@ function handleDelete(obj: any) {
     });
 }
 
-function gotoExam() {
-    window.open('http://106.14.20.78:8080/szljTest', '_brank')
-}
 
 const rules = {
     title: [{ required: true, message: '请输入标题', trigger: 'blur' }],

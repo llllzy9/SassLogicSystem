@@ -71,14 +71,7 @@ const state = reactive({
 
     ],
     overdueHomework: [],
-    takeEffectHomework: [],
-    fullPopUps: {
-        title: '1',
-        score: '1',
-        startTime: '2',
-        endTime: '3',
-        content: '1'
-    }
+    takeEffectHomework: []
 })
 function getData() {
     getDistributeHomework()

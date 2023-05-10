@@ -80,11 +80,8 @@ import {getAllClass} from '@/network/user.js'
 import { uploadImage, getImage } from '@/network/upload.js'
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
-import { useUserStore } from '@/stores/user';
-import moment from 'moment';
 import type { Moment } from 'moment';
 const roles = inject('roles')
-const userStore = useUserStore()
 const skeletonLoading = ref<boolean>(false)
 skeletonLoading.value = true
 const state = reactive({

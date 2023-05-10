@@ -16,9 +16,15 @@
         </a-tab-pane>
     </a-tabs>
 
-    <a-modal v-model:visible="visible" title="打回作业" @ok="handleOk"  ok-text="确认"
-      cancel-text="取消">
+    <a-modal v-model:visible="visible" title="打回作业" @ok="handleOk" ok-text="确认" cancel-text="取消">
+        <a-form-item label="截止时间"><a-date-picker show-time placeholder="截止时间" @change="onChange" format="YYYY/MM/DD HH:mm:ss"/></a-form-item>
         <a-form-item label="打回理由"><a-textarea v-model:value="state.popUpsData.returnCause" placeholder="请输入打回作业理由"
+                :rows="4" /></a-form-item>
+    </a-modal>
+
+    <a-modal v-model:visible="correctVisible" title="批改作业" @ok="handleCorrect" ok-text="确认" cancel-text="取消">
+        <a-form-item label="分数"><a-input placeholder="分数" v-model:value="state.correctForm.score"/></a-form-item>
+        <a-form-item label="评论"><a-textarea v-model:value="state.correctForm.comment" placeholder="描述内容"
                 :rows="4" /></a-form-item>
     </a-modal>
 </template>
@@ -28,11 +34,11 @@ import { ref, reactive, createVNode, toRaw } from 'vue';
 import myTable from '@/components/Table/index.vue'
 import { useRouter, useRoute } from 'vue-router';
 import { getAllClass } from '@/network/user.js'
-import { getHomework, getStudentHomework, returnStudentHomework } from '@/network/homework.js';
-import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
-import { message, Modal } from 'ant-design-vue';
+import { getStudentHomework, returnStudentHomework, markStudentHomework } from '@/network/homework.js';
+import { message } from 'ant-design-vue';
 import { useUserStore } from '@/stores/user'
 import { dataClassification } from '@/hooks/fication'
+import type { Moment } from 'moment';
 const userStore = useUserStore()
 const router = useRouter()
 const route = useRoute()
@@ -50,6 +56,11 @@ const columns = [
         time: 'date',
     },
     {
+        title:'分数',
+        dataIndex:'score',
+        text:true
+    },
+    {
         title: '内容描述',
         dataIndex: 'content'
     },
@@ -57,7 +68,7 @@ const columns = [
         title: '状态',
         dataIndex: 'returnCause',
         tags: {
-            returnCause:true
+            returnCause: true
         }
     },
     {
@@ -92,7 +103,14 @@ const state = reactive({
     popUpsData: {
         homeworkId: '',
         userId: '',
-        returnCause: ''
+        returnCause: '',
+        newEndTime: ''
+    },
+    correctForm:{
+        userId:'',
+        homeworkId:'',
+        score:'',
+        comment:''
     }
 })
 interface Class {
@@ -121,17 +139,33 @@ function getData() {
             if (res.data.code === 200) {
                 console.log(res.data.data)
                 state.allHomeWork = res.data.data
-                state.correctedHomework = dataClassification(res.data.data, 'date', 'endTime').trueArray
+                state.correctedHomework = dataClassification(res.data.data, 'status', 'score').trueArray
                 state.notViewHomework = dataClassification(res.data.data, 'status', 'score').falseArray
                 console.log(state);
             }
         })
 }
 getData()
-
+const correctVisible = ref(false)
 function handleCorrecting(obj: any) {
+    state.correctForm.userId = obj.userId
+    state.correctForm.homeworkId = obj.homeworkId
+    correctVisible.value = true
     console.log(obj);
 }
+
+const handleCorrect = () => {
+    markStudentHomework(toRaw(state.correctForm))
+        .then((res:any) => {
+            if(res.data.code === 200){
+                message.success('批改成功')
+                correctVisible.value = false
+            }else{
+                message.error(res.data.msg)
+            }
+        })
+}
+
 const visible = ref<boolean>(false)
 function handleRetrun(obj: any) {
     visible.value = true
@@ -140,13 +174,14 @@ function handleRetrun(obj: any) {
     state.popUpsData.userId = obj.userId
 }
 
-const retrunCause = ref('')
 const handleOk = (e: MouseEvent) => {
     console.log(toRaw(state.popUpsData));
     returnStudentHomework(toRaw(state.popUpsData))
         .then((res: any) => {
             if (res.data.code === 200) {
                 message.success('打回成功')
+            } else {
+                message.error(res.data.msg)
             }
         })
     getData()
@@ -157,6 +192,9 @@ const selctValue = ref()
 function handleChange(val: any) {
     console.log(val)
     getData()
-
 }
+
+const onChange = (value: Moment[], dateString: string[]) => {
+    state.popUpsData.newEndTime = dateString.toString()
+};
 </script>

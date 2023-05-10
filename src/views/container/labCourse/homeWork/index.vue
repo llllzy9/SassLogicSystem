@@ -8,7 +8,7 @@
         <DoHomework :fullPopUps="state.fullPopUps" ref="popRef" />
     </div>
     <div class="modal">
-        <a-modal v-model:visible="visible" width="600px" title="布置作业">
+        <a-modal v-model:visible="visible" width="600px" :title="modalTiele">
             <template #footer>
             </template>
             <a-form ref="formRef" :model="state.formState" :rules="rules" :label-col="{ span: 4 }"
@@ -30,7 +30,6 @@
                         format="YYYY-MM-DD HH:mm:ss" placeholder="结课时间" :open="endOpen" @openChange="handleEndOpenChange"
                         @change="onEndChange" />
 
-
                 </a-form-item>
                 <a-form-item label="班级" name="clsIds">
                     <a-select v-model:value="state.formState.clsIds" mode="tags" placeholder="请选择参加的班级">
@@ -46,7 +45,6 @@
                 </a-form-item>
             </a-form>
         </a-modal>
-
     </div>
 </template>
 
@@ -59,6 +57,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { distributeHomework,deleteHomeWork } from '@/network/homework.js'
 import {getAllClass} from '@/network/user.js'
 import type { Moment } from 'moment';
+import moment from 'moment';
 const roles = inject('roles')
 const emit = defineEmits(['refresh'])
 interface Props {
@@ -126,7 +125,7 @@ const state = reactive({
                 },
                 {
                     label: '编辑',
-                    func: (obj: any) => openFullModal(obj),
+                    func: (obj: any) => openEditModal(obj),
                     type: 'primary',
                     display: roles == 2
                 },
@@ -158,10 +157,19 @@ const state = reactive({
         courseId:''
     },
 })
+const modalTiele = ref('')
+function openEditModal(obj:any){
+    modalTiele.value = '编辑'
+    console.log(new Date(obj.startTime));
+    startTimeVal.value =  moment(obj.startTime)
+    endTimeVal.value = moment(obj.endTime)
+    visible.value = true
+    state.formState = obj
+}
+
 const popRef = ref()
 function openFullModal(obj: any) {
     console.log(obj);
-    
     state.fullPopUps = obj
     popRef.value.openFullModal(obj.id)
 }
@@ -220,6 +228,7 @@ const handleEndOpenChange = (open: boolean) => {
 
 const visible = ref(false)
 function assignHomework() {
+    modalTiele.value = '布置作业'
     visible.value = true
 }
 const formRef = ref()
@@ -235,6 +244,8 @@ const formSubmit = () => {
                     if(res.data.code === 200){
                         emit('refresh')
                         visible.value = false
+                    }else{
+                        message.error(res.data.msg)
                     }
                 })
         })

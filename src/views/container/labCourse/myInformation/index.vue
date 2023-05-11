@@ -162,8 +162,6 @@ function deleteInfo(id: number) {
 const visible = ref(false)
 function publishInformation() {
     visible.value = true
-    console.log(allClasses.value);
-    
 }
 
 
@@ -172,12 +170,14 @@ const formSubmit = () => {
     formRef.value
         .validate()
         .then(() => {
-            console.log('values', state.formState, toRaw(state.formState))
             publishMessage(toRaw(state.formState))
                 .then((res: any) => {
                     if (res.data.code === 200) {
                         console.log(res.data);
-
+                        message.success(res.data.msg)
+                        visible.value = false
+                    }else{
+                        message.error(res.data.msg)
                     }
                 })
         })

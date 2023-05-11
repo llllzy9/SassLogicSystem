@@ -56,7 +56,6 @@ export function getDistributeHomework() {
     })
 }
 
-
 //删除作业
 export function deleteHomeWork(params) {
     return request({
@@ -65,7 +64,6 @@ export function deleteHomeWork(params) {
         params:params
     })
 }
-
 
 //获取学生提交的作业
 export function getStudentHomework(params) {
@@ -89,5 +87,14 @@ export function returnStudentHomework(params) {
         url:'/teacher/returnStudentHomework',
         method:'post',
         params:params
+    })
+}
+
+//修改发布的作业信息
+export function modifyDistributeHomework(data){
+    return request({
+        url:'/teacher/modifyDistributeHomework',
+        method:'post',
+        data:data
     })
 }

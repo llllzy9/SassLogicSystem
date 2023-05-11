@@ -96,7 +96,24 @@ const columns = [
 
     }
 ]
-const state = reactive({
+interface State{
+    allHomeWork:any[]
+    correctedHomework:any[]
+    notViewHomework:any[]
+    popUpsData:{
+        homeworkId: string
+        userId: string
+        returnCause: string
+        newEndTime:string
+    }
+    correctForm:{
+        userId:string
+        homeworkId:string
+        score:string
+        comment:string
+    }
+}
+const state = reactive<State>({
     allHomeWork: [],
     correctedHomework: [],
     notViewHomework: [],

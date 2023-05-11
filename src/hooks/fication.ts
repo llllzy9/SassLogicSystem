@@ -1,26 +1,22 @@
 import { ref, reactive } from 'vue'
 
-export function dataClassification(array: any, str: string, key:string) {
-    
-    interface List {
+export function dataClassification(array: any[], str: string, key:string): { trueArray: any[], falseArray: any[] }  {
 
-    }
-    const allArray = ref<List[]>([])
-    const trueArray = ref<List[]>([])
-    const falseArray = ref<List[]>([])
+    const trueArray = <any[]>[]
+    const falseArray = <any[]>[]
 
     array.filter((item: any) => {
         if(str === 'date'){
             if (deadlineTime(item[key])) {
-                trueArray.value.push(item)
+                trueArray.push(item)
             } else {
-                falseArray.value.push(item)
+                falseArray.push(item)
             }
         }else if(str === 'status'){
             if (item[key]) {
-                trueArray.value.push(item)
+                trueArray.push(item)
             } else {
-                falseArray.value.push(item)
+                falseArray.push(item)
             }
         }
 

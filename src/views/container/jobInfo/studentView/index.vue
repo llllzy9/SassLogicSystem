@@ -85,7 +85,20 @@ const columns = [
     }
 ]
 const activeKey = ref('1')
-const state = reactive({
+interface State{
+    allHomeWork: any[]
+    doneHomeWork: any[]
+    noneHomeWork: any[]
+    fullPopUps: {
+        id:string
+        title:string
+        score:string
+        startTime:string
+        endTime:string
+        content:string
+    },
+}
+const state = reactive<State>({
     allHomeWork: [],
     doneHomeWork: [],
     noneHomeWork: [],
@@ -104,12 +117,12 @@ function openFullModal(obj: any) {
     popRef.value.openFullModal(obj.id)
 }
 
-function dataClassification(array: any) {
-    array.filter((item: any) => {
-        if (item.completionStatus) {
+function dataClassification(array: any[]) {
+    array.filter((item) => {
+        if (item?.completionStatus) {
             state.doneHomeWork.push(item)
         } else {
-            state.noneHomeWork.push(item)
+            state.noneHomeWork.push(item)   
         }
     })
 }

@@ -66,7 +66,12 @@ const columns = [
 
     }
 ]
-const state = reactive({
+interface State{
+    allHomeWork:any[]
+    overdueHomework:any[]
+    takeEffectHomework:any[]
+}
+const state = reactive<State>({
     allHomeWork: [
 
     ],

@@ -6,7 +6,7 @@
         <a-form-item label="邮箱" name="email">
             <a-input v-model:value="formData.email" :disabled="!isChange" />
         </a-form-item>
-        <a-form-item label="班级" name="clsName">
+        <a-form-item label="班级" name="clsName" v-if="!(roles == 2)">
             <a-select ref="select" v-model:value="formData.clsName" @change="optionChange" :disabled="!isChange">
                 <a-select-option v-for="opt in state.class" :key="opt.id" :value="opt.id">{{ opt.cls }}</a-select-option>
             </a-select>
@@ -43,12 +43,12 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, toRefs, onMounted } from 'vue';
+import { reactive, ref, toRefs, onMounted, inject } from 'vue';
 import { useUserStore } from '@/stores/user';
 import { message } from 'ant-design-vue';
 import { changeUserInfo, getUserInfo, getAllClass } from '@/network/user.js'
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons-vue';
-
+const roles = inject('roles')
 getUserInfo()
     .then((res: any) => {
         if (res.data.code === 200) {

@@ -32,7 +32,7 @@
           </span>
 
           <a-button @click="openModal(record)" :disabled="!record.completionStatus" v-if="roles != 2">下载</a-button>
-          <a-button @click="openModal(record)" :disabled="record.files? !(record.files.length >=  1) : true"  
+          <a-button @click="openModal(record)" :disabled="record.files ? !(record.files.length >= 1) : true"
             v-else-if="roles == 2">下载</a-button>
         </template>
       </a-table-column>
@@ -73,12 +73,14 @@ interface Props {
 }
 const props = withDefaults(defineProps<Props>(), {
 })
+const userId = ref()
 const homeworkId = ref(0)
 const fileList = ref([])
 const visible = ref<boolean>(false)
 function openModal(record: any) {
-  console.log(record);  
+  console.log(record);
   homeworkId.value = record.homeworkId
+  userId.value = record.userId
   visible.value = true
   // getSubmitHomework({
   //   homeworkId: id
@@ -91,14 +93,25 @@ function openModal(record: any) {
   // })
 }
 
-function downloadFile(file: any) {
-  downloadLocal({
-    homeworkId: homeworkId.value,
-    filename: file
-  })
-    .then((res: any) => {
-      message.success(res.data.msg)
-    })
+async function downloadFile(file: any) {
+  // try {
+  //   const response = await downloadLocal({
+  //     userId: userId.value,
+  //     homeworkId: homeworkId.value,
+  //     filename: file
+  //   })
+  //   const url = window.URL.createObjectURL(new Blob([response.data]));
+  //   const link = document.createElement('a');
+  //   link.href = url;
+  //   link.setAttribute('download', 'file name.ext');
+  //   document.body.appendChild(link);
+  //   link.click();
+  //   document.body.removeChild(link);
+  // } catch (error) {
+  //   console.error(error);
+  // }
+    window.open(`http://154.204.60.38:8000/downloadLocal?userId=${userId.value}&homeworkId=${homeworkId.value}&filename=${file}`,'_blank')
+    visible.value = false
 }
 
 function afterClose() {

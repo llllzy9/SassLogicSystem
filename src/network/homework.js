@@ -56,6 +56,14 @@ export function getDistributeHomework() {
     })
 }
 
+//修改作业信息
+export function modifyDistributeHomework(data) {
+    return request({
+        url:'/teacher/modifyDistributeHomework',
+        method:'post',
+        data:data
+    })
+}
 
 //删除作业
 export function deleteHomeWork(params) {

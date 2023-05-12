@@ -54,7 +54,7 @@ import myTable from '@/components/Table/index.vue'
 import DoHomework from '@/components/DoHomework/index.vue'
 import { Modal, message } from 'ant-design-vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
-import { distributeHomework,deleteHomeWork } from '@/network/homework.js'
+import { distributeHomework,deleteHomeWork, modifyDistributeHomework } from '@/network/homework.js'
 import {getAllClass} from '@/network/user.js'
 import type { Moment } from 'moment';
 import moment from 'moment';
@@ -239,7 +239,8 @@ const formSubmit = () => {
             console.log('values', state.formState, toRaw(state.formState))
             const reqdata = toRaw(state.formState)
             reqdata.courseId = props.data.courseId
-            distributeHomework(reqdata)
+            const request = modalTiele.value === '布置作业'? distributeHomework : modifyDistributeHomework
+            request(reqdata)
                 .then((res: any) => {
                     if(res.data.code === 200){
                         emit('refresh')

@@ -31,7 +31,7 @@ export function uploadFile(data){
 export function downloadLocal(params){
     return request({
         url:'/downloadLocal',
-        method:'post',
+        method:'get',
         params:params
     })
 }

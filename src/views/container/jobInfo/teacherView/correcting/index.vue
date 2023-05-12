@@ -149,16 +149,14 @@ console.log(route.query, 'query');
 function getData() {
     const params = {
         homeworkId: route.query.id,
-        clsId: selectValue.value
+        clsId: selectValue.value || 2
     }
     getStudentHomework(params)
         .then((res: any) => {
             if (res.data.code === 200) {
-                console.log(res.data.data)
                 state.allHomeWork = res.data.data
                 state.correctedHomework = dataClassification(res.data.data, 'status', 'score').trueArray
                 state.notViewHomework = dataClassification(res.data.data, 'status', 'score').falseArray
-                console.log(state);
             }
         })
 }

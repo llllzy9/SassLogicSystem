@@ -32,6 +32,7 @@ export function downloadLocal(params){
     return request({
         url:'/downloadLocal',
         method:'get',
-        params:params
+        params:params,
+        responseType:'blob'
     })
 }

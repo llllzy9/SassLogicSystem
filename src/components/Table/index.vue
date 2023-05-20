@@ -94,24 +94,26 @@ function openModal(record: any) {
 }
 
 async function downloadFile(file: any) {
-  // try {
-  //   const response = await downloadLocal({
-  //     userId: userId.value,
-  //     homeworkId: homeworkId.value,
-  //     filename: file
-  //   })
-  //   const url = window.URL.createObjectURL(new Blob([response.data]));
-  //   const link = document.createElement('a');
-  //   link.href = url;
-  //   link.setAttribute('download', 'file name.ext');
-  //   document.body.appendChild(link);
-  //   link.click();
-  //   document.body.removeChild(link);
-  // } catch (error) {
-  //   console.error(error);
-  // }
-    window.open(`http://154.204.60.38:8000/downloadLocal?userId=${userId.value}&homeworkId=${homeworkId.value}&filename=${file}`,'_blank')
-    visible.value = false
+  try {
+    const response = await downloadLocal({
+      userId: userId.value,
+      homeworkId: homeworkId.value,
+      filename: file
+    })
+  
+    const url = window.URL.createObjectURL(new Blob([response.data.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'file name.ext');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error(error);
+  }
+  // const token = sessionStorage.getItem('token')
+  //   window.open(`http://154.204.60.38:8000/downloadLocal?userId=${userId.value}&homeworkId=${homeworkId.value}&filename=${file}&token=${encodeURIComponent(token as string)}`)
+  //   visible.value = false
 }
 
 function afterClose() {

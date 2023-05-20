@@ -40,14 +40,6 @@
           </template>
         </a-list>
       </a-card>
-      <a-card title="作业期限" style="width: 300px">
-        <template #extra><a href="#">进入实验</a></template>
-        <a-row :gutter="16">
-          <a-col :span="24" style="margin-top: 32px">
-            <a-statistic-countdown title="数字逻辑第一章上机作业" :value="deadline" format="D 天 H 时 m 分 s 秒" />
-          </a-col>
-        </a-row>
-      </a-card>
     </div>
   </div>
   <div class="container" v-if="userStore.isTeacher">
@@ -97,14 +89,6 @@
             </a-list-item>
           </template>
         </a-list>
-      </a-card>
-      <a-card title="作业期限" style="width: 300px">
-        <template #extra><a href="#">进入实验</a></template>
-        <a-row :gutter="16">
-          <a-col :span="24" style="margin-top: 32px">
-            <a-statistic-countdown title="数字逻辑第一章上机作业" :value="deadline" format="D 天 H 时 m 分 s 秒" />
-          </a-col>
-        </a-row>
       </a-card>
     </div>
     <div class="chart">

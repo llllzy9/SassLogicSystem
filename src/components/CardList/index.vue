@@ -54,7 +54,7 @@ const props = withDefaults(defineProps<Props>(), {
 //打开弹窗
 function openModal(str: string, obj?: any, i?: number,) {
     if (str === 'exam') {
-        window.open('https://www.baidu.com', '_blank');
+        window.open('http://106.14.20.78:8080/szljTest', '_brank')
     } else if (str === 'detail') {
         router.push({
             name: 'courseDetail',

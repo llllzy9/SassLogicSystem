@@ -176,6 +176,7 @@ const formSubmit = () => {
                         console.log(res.data);
                         message.success(res.data.msg)
                         visible.value = false
+                        emit('refresh')
                     }else{
                         message.error(res.data.msg)
                     }
